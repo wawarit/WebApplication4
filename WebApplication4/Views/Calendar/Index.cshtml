@@ -22,7 +22,27 @@
                 },
                 success: function (json)
                 {
-                    alert("l");
+                    if ((json[0].Status.Status) && (json[0].Status.Success)) {
+                        var dataHoliday = json[0].Details.dataTableaHoliday;
+                        var dataEvents = json[0].Details.dataTableEvents;
+
+                        if (dataHoliday != null)
+                        {
+
+                            var filterData = [];
+                            $.each(dataHoliday, function () {
+                                if (this.in_stock && this.stock_quantity === 1) {
+                                    filterData.push(this);
+                                }
+                            });
+                            console.log(filterData);
+                            
+                        }
+                        if (dataEvents != null) {
+
+                        }
+
+                    }
                 },
                 complete: function ()
                 {
@@ -34,6 +54,7 @@
                 }
             });
     });
+
 
 </script>
 

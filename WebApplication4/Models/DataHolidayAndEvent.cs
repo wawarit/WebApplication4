@@ -8,7 +8,7 @@ namespace WebApplication4.Models
 {
     public class DataHolidayAndEvent
     {
-        public DataTable dataTableaHoliday { get; set; }
-        public DataTable dataTableEvents { get; set; }
+        public string dataTableaHoliday { get; set; }
+        public string dataTableEvents { get; set; }
     }
 }
