@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script>
+    $(document).ready(function () {
+        var dataHoliday =
+        {
+            Year: '2023'
+        }
+        $.ajax({
+                url: '@Url.Action("getEventday", "Calendar")',
+                type: "POST",
+                data: JSON.stringify(dataHoliday),
+                dataType: "json",
+                contentType: "application/json",
+                beforeSend: function ()
+                {
+                    
+                },
+                success: function (json)
+                {
+                    alert("l");
+                },
+                complete: function ()
+                {
+                    
+                },
+                error: function (response)
+                {
+            
+                }
+            });
+    });
+
+</script>
+
+
+<h2>Index</h2>
+
+
