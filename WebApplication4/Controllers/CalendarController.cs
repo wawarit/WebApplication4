@@ -73,6 +73,8 @@ namespace WebApplication3.Controllers
                 result.dataTableaHoliday = DataTableToJSON(dataTableaHoliday);
                 result.dataTableEvents = DataTableToJSON(dataTableEvents);
 
+                
+
                 var status = new ResultModel
                 {
                     Status = new HttpStatusCodeResult(200),
@@ -105,7 +107,6 @@ namespace WebApplication3.Controllers
                 });
             }
         }
-
         public static string DataTableToJSON(DataTable table)
         {
             JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
@@ -116,12 +117,22 @@ namespace WebApplication3.Controllers
                 childRow = new Dictionary<string, object>();
                 foreach (DataColumn col in table.Columns)
                 {
-                    childRow.Add(col.ColumnName, row[col]);
+                    if (col.DataType == typeof(DateTime))
+                    {
+                        childRow.Add(col.ColumnName, row[col].ToString());
+                    }
+                    else
+                    {
+                        childRow.Add(col.ColumnName, row[col]);
+                    }
                 }
                 parentRow.Add(childRow);
             }
             return jsSerializer.Serialize(parentRow);
         }
+
+        
+
 
         //public JsonResult WelcomeNote()
         //{

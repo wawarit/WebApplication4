@@ -23,26 +23,54 @@
                 success: function (json)
                 {
                     if ((json[0].Status.Status) && (json[0].Status.Success)) {
-                        var dataHoliday = json[0].Details.dataTableaHoliday;
-                        var dataEvents = json[0].Details.dataTableEvents;
+                        var dataHoliday = JSON.parse(json[0].Details.dataTableaHoliday);
+                        var dataEvents = JSON.parse(json[0].Details.dataTableEvents);
 
                         if (dataHoliday != null)
                         {
-
-                            var filterData = [];
-                            $.each(dataHoliday, function () {
-                                if (this.in_stock && this.stock_quantity === 1) {
-                                    filterData.push(this);
-                                }
-                            });
-                            console.log(filterData);
-                            
+                            for (let i = 0; i < dataHoliday.length; i++) {
+                                console.log(dataHoliday[i].Day_Holiday);
+                                console.log(dataHoliday[i].Details);
+                            }
                         }
                         if (dataEvents != null) {
-
+                            for (let i = 0; i < dataEvents.length; i++) {
+                                console.log(dataEvents[i].EventID);
+                                console.log(dataEvents[i].EventDate);
+                            }
                         }
 
                     }
+                    //var dates = ['2/1/2023',
+                    //    '6/3/2023',
+                    //    '6/4/2023', '13/4/2023', '14/4/2023', '17/4/2023',
+                    //    '1/5/2023', '4/5/2023',
+                    //    '5/6/2023',
+                    //    '28/7/2023',
+                    //    '1/8/2023', '14/8/2023',
+                    //    '13/10/2023', '23/10/2023',
+                    //    '5/12/2023', '11/12/2023'];
+
+                    //var tips = ['ชดเชย วันสิ้นปีและวันขึ้นปีใหม่',
+                    //    'วันมาฆบูชา',
+                    //    'วันจักรี', 'วันสงกรานต์', 'วันสงกรานต์', 'ชดเชย วันสงกรานต์',
+                    //    'วันแรงงาน', 'วันฉัตรมงคล',
+                    //    'ชดเชย วันเฉลิมพระชนมพรรษาสมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินีและวันวิสาขบูชา',
+                    //    'วันเฉลิมพระชนมพรรษา พระบาทสมเด็จพระเจ้าอยู่หัว',
+                    //    'วันอาสาฬหบูชา', 'ชดเชย วันเฉลิมพระชนมพรรษา สมเด็จพระนางเจ้าสิริกิติ์ พระบรมราชินีนาถ พระบรมราชชนนีพันปีหลวง และวันแม่แห่งชาติ',
+                    //    'วันคล้ายวันสวรรคตพระบาทสมเด็จพระบรม ชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราชบรมนาถบพิตร', 'วันปิยมหาราช',
+                    //    'วันคล้ายวันพระบรมราชสมภพ พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร วันชาติ และวันพ่อแห่งชาติ', 'ชดเชย วันรัฐธรรมนูญ'];
+                    //var month = date.getMonth() + 1;
+                    //var year = date.getFullYear();
+                    //var day = date.getDate();
+                    //var newdate = day + "/" + month + '/' + year;
+                    //for (var i = 0; i < dates.length; i++) {
+                    //    if (dates[i].toString() == newdate) {
+
+                    //        return [true, 'hightligh', tips[i]];
+                    //    }
+                    //}
+                    //return [true, ''];
                 },
                 complete: function ()
                 {
@@ -52,13 +80,71 @@
                 {
             
                 }
-            });
+                
+                });
     });
 
 
 </script>
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-login">
+                <div class="panel-heading">
+                    <div class="row">
+                        <img src="~/Img/user.png" width="80" id="login-img" />
+                        <div class="col-xs-12">
+                            <h3><b>CALENDAR</b></h3>
+                            <p>ปฎิทินวันหยุดประจำปีและกิจกรรมต่อวัน</p>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="login-form">
+                                <div class="form-group">
+                                    <input type="text" name="Year" id="Year" class="form-control" placeholder="Year">
+                                </div>
+                                <br />
+                                @*<div class="form-group">
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                </div>*@
+                                <div class="form-group">
+                                    <input type="submit" id="send" class="form-control btn-login" value="Send">
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="loading" style="text-align: center; margin-top: 2px; display:none">
+                                                <img src="~/Img/loading-loading-forever.gif" width="100" height="100" />
+                                            </div>
+                                            <div class="error" style="display:none">
+                                                <div class="alert alert-danger" role="alert" style="text-align:center" id="text-error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h2>Index</h2>
+<!--<body>
+    <div class='container'>
+        <div id="datepicker"></div>-->
+
+        @*<p style="font-size: 17px;">Click on the textbox and move mouse over following dates - '8-11-2022','11-11-2022','18-11-2022','1-12-2022'. <br>A tooltip will show a message - "New event on " </p>
+        <input type='text' id='datepicker'><br>*@
+
+    <!--</div>-->
+
+    <h2>Index</h2>
 
 
