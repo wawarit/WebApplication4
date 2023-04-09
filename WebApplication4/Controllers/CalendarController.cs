@@ -167,77 +167,77 @@ namespace WebApplication3.Controllers
             return View();
         }
 
-        [HttpPut]
-        public ActionResult UpdateEventHoliday(DataHolidayAndEvent model)
-        {
-            DataTable dtable = new DataTable();
+        //[HttpPut]
+        //public ActionResult UpdateEventHoliday(DataHolidayAndEvent model)
+        //{
+        //    DataTable dtable = new DataTable();
 
-            var sql = @"update Dtb_Holiday set (@Day_Holiday, @Details)";
+        //    var sql = @"update Dtb_Holiday set (@Day_Holiday, @Details)";
 
-            using (SqlConnection con = new SqlConnection(sqlConn))
-            {
-                con.Open();
-
-
-                using (var cmd = new SqlCommand(sql, con))
-                {
-                    cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-                    cmd.Parameters.AddWithValue("@Details", model.Holidayname);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-            }
-
-            return View();
-        }
-
-        [HttpDelete]
-        public ActionResult EventHoliday(DataHolidayAndEvent model)
-        {
-            DataTable dtable = new DataTable();
-
-            var sql = @"delete from Dtb_Holiday where day (@Day_Holiday) = @day ";
-
-            using (SqlConnection con = new SqlConnection(sqlConn))
-            {
-                con.Open();
+        //    using (SqlConnection con = new SqlConnection(sqlConn))
+        //    {
+        //        con.Open();
 
 
-                using (var cmd = new SqlCommand(sql, con))
-                {
-                    cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-                    cmd.Parameters.AddWithValue("@Details", model.Holidayname);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-            }
+        //        using (var cmd = new SqlCommand(sql, con))
+        //        {
+        //            cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+        //            cmd.Parameters.AddWithValue("@Details", model.Holidayname);
+        //            cmd.ExecuteNonQuery();
+        //            con.Close();
+        //        }
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        [HttpPost]
-        public ActionResult EventsDay(DataHolidayAndEvent model)
-        {
-            DataTable dtable = new DataTable();
+        //[HttpDelete]
+        //public ActionResult EventHoliday(DataHolidayAndEvent model)
+        //{
+        //    DataTable dtable = new DataTable();
 
-            var sql = @"insert into Dtb_Holiday values (@Day_Holiday, @Details)";
+        //    var sql = @"delete from Dtb_Holiday where day (@Day_Holiday) = @day ";
 
-            using (SqlConnection con = new SqlConnection(sqlConn))
-            {
-                con.Open();
+        //    using (SqlConnection con = new SqlConnection(sqlConn))
+        //    {
+        //        con.Open();
 
 
-                using (var cmd = new SqlCommand(sql, con))
-                {
-                    cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-                    cmd.Parameters.AddWithValue("@Details", model.Holidayname);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-            }
+        //        using (var cmd = new SqlCommand(sql, con))
+        //        {
+        //            cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+        //            cmd.Parameters.AddWithValue("@Details", model.Holidayname);
+        //            cmd.ExecuteNonQuery();
+        //            con.Close();
+        //        }
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //public ActionResult EventsDay(DataHolidayAndEvent model)
+        //{
+        //    DataTable dtable = new DataTable();
+
+        //    var sql = @"insert into Dtb_Holiday values (@Day_Holiday, @Details)";
+
+        //    using (SqlConnection con = new SqlConnection(sqlConn))
+        //    {
+        //        con.Open();
+
+
+        //        using (var cmd = new SqlCommand(sql, con))
+        //        {
+        //            cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+        //            cmd.Parameters.AddWithValue("@Details", model.Holidayname);
+        //            cmd.ExecuteNonQuery();
+        //            con.Close();
+        //        }
+        //    }
+
+        //    return View();
+        //}
 
 
 
