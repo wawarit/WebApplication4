@@ -3,6 +3,7 @@
     ViewBag.Title = "Index";
 }
 
+
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script>
     $(document).ready(function () {
@@ -18,7 +19,7 @@
                 contentType: "application/json",
                 beforeSend: function ()
                 {
-                    
+
                 },
                 success: function (json)
                 {
@@ -41,46 +42,31 @@
                         }
 
                     }
-                    //var dates = ['2/1/2023',
-                    //    '6/3/2023',
-                    //    '6/4/2023', '13/4/2023', '14/4/2023', '17/4/2023',
-                    //    '1/5/2023', '4/5/2023',
-                    //    '5/6/2023',
-                    //    '28/7/2023',
-                    //    '1/8/2023', '14/8/2023',
-                    //    '13/10/2023', '23/10/2023',
-                    //    '5/12/2023', '11/12/2023'];
 
-                    //var tips = ['ชดเชย วันสิ้นปีและวันขึ้นปีใหม่',
-                    //    'วันมาฆบูชา',
-                    //    'วันจักรี', 'วันสงกรานต์', 'วันสงกรานต์', 'ชดเชย วันสงกรานต์',
-                    //    'วันแรงงาน', 'วันฉัตรมงคล',
-                    //    'ชดเชย วันเฉลิมพระชนมพรรษาสมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินีและวันวิสาขบูชา',
-                    //    'วันเฉลิมพระชนมพรรษา พระบาทสมเด็จพระเจ้าอยู่หัว',
-                    //    'วันอาสาฬหบูชา', 'ชดเชย วันเฉลิมพระชนมพรรษา สมเด็จพระนางเจ้าสิริกิติ์ พระบรมราชินีนาถ พระบรมราชชนนีพันปีหลวง และวันแม่แห่งชาติ',
-                    //    'วันคล้ายวันสวรรคตพระบาทสมเด็จพระบรม ชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราชบรมนาถบพิตร', 'วันปิยมหาราช',
-                    //    'วันคล้ายวันพระบรมราชสมภพ พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร วันชาติ และวันพ่อแห่งชาติ', 'ชดเชย วันรัฐธรรมนูญ'];
-                    //var month = date.getMonth() + 1;
-                    //var year = date.getFullYear();
-                    //var day = date.getDate();
-                    //var newdate = day + "/" + month + '/' + year;
-                    //for (var i = 0; i < dates.length; i++) {
-                    //    if (dates[i].toString() == newdate) {
+                    var dates = dataHoliday[i];
+                    var tips = dataHoliday[i];
 
-                    //        return [true, 'hightligh', tips[i]];
-                    //    }
-                    //}
-                    //return [true, ''];
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+                    var day = date.getDate();
+                    var newdate = day + "/" + month + '/' + year;
+                    for (var i = 0; i < dates.length; i++) {
+                        if (dates[i].toString() == newdate) {
+
+                            return [true, 'hightligh', tips[i]];
+                        }
+                    }
+                    return [true, ''];
                 },
                 complete: function ()
                 {
-                    
+                    $(".loading").hide();
                 },
                 error: function (response)
                 {
-            
+                    document.getElementById("text-error").innerHTML = "You can't check back the past year.";
                 }
-                
+
                 });
     });
 
@@ -110,8 +96,8 @@
                                 </div>
                                 <br />
                                 @*<div class="form-group">
-                                    <input type="password" name="password" id="password" class="form-control" placeholder="Password">
-                                </div>*@
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                    </div>*@
                                 <div class="form-group">
                                     <input type="submit" id="send" class="form-control btn-login" value="Send">
                                 </div>
@@ -136,14 +122,14 @@
     </div>
 </div>
 
-<!--<body>
+<body>
     <div class='container'>
-        <div id="datepicker"></div>-->
+        <div id="datepicker"></div>
 
         @*<p style="font-size: 17px;">Click on the textbox and move mouse over following dates - '8-11-2022','11-11-2022','18-11-2022','1-12-2022'. <br>A tooltip will show a message - "New event on " </p>
-        <input type='text' id='datepicker'><br>*@
+            <input type='text' id='datepicker'><br>*@
 
-    <!--</div>-->
+    </div>
 
     <h2>Index</h2>
 
