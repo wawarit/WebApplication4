@@ -1,153 +1,130 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    Layout = null;
 }
 
+<style media="screen">
+    .container {
+        border: 0px solid darkgrey;
+        border-radius: 3px;
+        padding: 5px;
+        width: 99%;
+        margin: 0 auto;
+    }
 
-<script src="~/Scripts/jquery-3.4.1.js"></script>
+    .hightligh a {
+        background: #FF0000 !important;
+        color: #FFFF00 !important;
+    }
+
+
+    .ui-datepicker {
+        background: #B0C4DE;
+        border: 1px solid #555;
+        color: #000000;
+    }
+</style>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+
 <script>
     $(document).ready(function () {
-        var dataHoliday =
-        {
-            Year: '2023'
-        }
-        $.ajax({
+
+        $(function () {
+            $("#year").change(function () {
+                $('#datepicker').datepicker("destroy");
+                var conceptName = $('#year').find(":selected").text();
+                higHlightDays(conceptName);
+
+            });
+        });
+
+        higHlightDays();
+        function higHlightDays(year)
+        {           
+            var dataHoliday =
+            {
+                Year: year
+            }
+            $.ajax({
                 url: '@Url.Action("getEventday", "Calendar")',
                 type: "POST",
                 data: JSON.stringify(dataHoliday),
                 dataType: "json",
                 contentType: "application/json",
-                beforeSend: function ()
-                {
+                beforeSend: function () {
 
                 },
-                success: function (json)
-                {
-                    if ((json[0].Status.Status) && (json[0].Status.Success)) {
-                        var dataHoliday = JSON.parse(json[0].Details.dataTableaHoliday);
-                        var dataEvents = JSON.parse(json[0].Details.dataTableEvents);
+                success: function (json) {
 
-                        if (dataHoliday != null)
-                        {
-                            for (let i = 0; i < dataHoliday.length; i++) {
-                                console.log(dataHoliday[i].Day_Holiday);
-                                console.log(dataHoliday[i].Details);
+                        if ((json[0].Status.Status) && (json[0].Status.Success)) {
+                            var dataHoliday = JSON.parse(json[0].Details.dataTableaHoliday);
+                            var dataEvents = JSON.parse(json[0].Details.dataTableEvents);
+
+                            if (dataHoliday != null)
+                            {
+                                $('#datepicker').datepicker({
+                                    beforeShowDay: function (date) {
+                                        return setHoliday(date, dataHoliday);
+                                    }
+                                });
+
+                            }
+                            if (dataEvents != null) {
+                                for (let i = 0; i < dataEvents.length; i++) {
+                                    //console.log(dataEvents[i].EventID);
+                                    //console.log(dataEvents[i].EventDate);
+                                }
                             }
                         }
-                        if (dataEvents != null) {
-                            for (let i = 0; i < dataEvents.length; i++) {
-                                console.log(dataEvents[i].EventID);
-                                console.log(dataEvents[i].EventDate);
-                            }
-                        }
-
-                    }
-
-                    var dates = dataHoliday[i];
-                    var tips = dataHoliday[i];
-
-                    var month = date.getMonth() + 1;
-                    var year = date.getFullYear();
-                    var day = date.getDate();
-                    var newdate = day + "/" + month + '/' + year;
-                    for (var i = 0; i < dates.length; i++) {
-                        if (dates[i].toString() == newdate) {
-
-                            return [true, 'hightligh', tips[i]];
-                        }
-                    }
-                    return [true, ''];
                 },
-                complete: function ()
-                {
-                    $(".loading").hide();
+                complete: function () {
+                    //$(".loading").hide();
                 },
-                error: function (response)
-                {
-                    document.getElementById("text-error").innerHTML = "You can't check back the past year.";
+                error: function (response) {
+                    // document.getElementById("text-error").innerHTML = "You can't check back the past year.";
                 }
+            });
+        }
+        function setHoliday(date, jsonHoliday) {
 
-                });
+            const dates = [];
+            const tips = [];
+            for (let i = 0; i < jsonHoliday.length; i++) {
+                dates.push(jsonHoliday[i].Day_Holiday);
+                tips.push(jsonHoliday[i].Details);
+            }
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+            var newdate = day + "/" + month + '/' + year;
+            for (var i = 0; i < dates.length; i++) {
+                if (dates[i].toString() == newdate) {
+                    return [true, 'hightligh', tips[i]];
+                }
+            }
+            return [true, ''];
+        }
+
+
+        
     });
-
 
 </script>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-login">
-                <div class="panel-heading">
-                    <div class="row">
-                        <img src="~/Img/user.png" width="80" id="login-img" />
-                        <div class="col-xs-12">
-                            <h3><b>CALENDAR</b></h3>
-                            <p>ปฎิทินวันหยุดประจำปีและกิจกรรมต่อวัน</p>
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div id="login-form">
-                                @*<div class="form-group">
-                                    <input type="text" name="Year" id="Year" class="form-control" placeholder="Year">
-                                </div>
-                                <br />*@
-                                @*<div class="form-group">
-                                        <input type="password" name="password" id="password" class="form-control" placeholder="Password">
-                                    </div>*@
-
-                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                                    @*<button type="button" class="btn btn-primary">1</button>
-                                    <button type="button" class="btn btn-primary">2</button>*@
-
-                                    <div class="btn-group" role="group">
-                                        <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="year" aria-expanded="false">
-                                            Year
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                            <li><a class="dropdown-item" href="#">2023</a></li>
-                                            <li><a class="dropdown-item" href="#">2022</a></li>
-                                            <li><a class="dropdown-item" href="#">2021</a></li>
-                                        </ul>
-                                     </div>
-                                </div>
-
-                                @*<div class="form-group">
-                                    <input type="submit" id="send" class="form-control btn-login" value="Send">
-                                </div>*@
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="loading" style="text-align: center; margin-top: 2px; display:none">
-                                                <img src="~/Img/loading-loading-forever.gif" width="100" height="100" />
-                                            </div>
-                                            <div class="error" style="display:none">
-                                                <div class="alert alert-danger" role="alert" style="text-align:center" id="text-error"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class='container'>
+    <div id="datepicker"></div>
+    <select id="year">
+        @for (int year = DateTime.Now.Year; year >= 2021; year--)
+        {
+            <option value="@year">@year</option>
+        }
+    </select>
 </div>
 
-<body>
-    <div class='container'>
-        <div id="datepicker"></div>
-
-        @*<p style="font-size: 17px;">Click on the textbox and move mouse over following dates - '8-11-2022','11-11-2022','18-11-2022','1-12-2022'. <br>A tooltip will show a message - "New event on " </p>
-            <input type='text' id='datepicker'><br>*@
-
-    </div>
-
-    @*<h2>Index</h2>*@
 
 

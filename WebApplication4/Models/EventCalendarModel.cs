@@ -8,5 +8,6 @@ namespace WebApplication4.Models
     public class EventCalendarModel
     {
         public String Year { get; set; }
+
     }
 }

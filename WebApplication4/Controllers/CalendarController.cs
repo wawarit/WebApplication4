@@ -43,7 +43,7 @@ namespace WebApplication3.Controllers
                     }
                 }
 
-                var getDataHoliday = "SELECT * FROM [Dtb_Holiday] where year(Day_Holiday) = @year";
+                var getDataHoliday = "SELECT * FROM [Dtb_Holiday] where year(Day_Holiday) = @year ";
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
                     con.Open();
@@ -56,7 +56,7 @@ namespace WebApplication3.Controllers
                     }
                 }
 
-                var getDataEvent = "SELECT * FROM [Dtb_Events] where year(EventDate) = @year";
+                var getDataEvent = "SELECT * FROM [Dtb_Events] where year(EventDate) = @year and Status = 1 ";
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
                     con.Open();
@@ -72,8 +72,6 @@ namespace WebApplication3.Controllers
                 var result = new DataHolidayAndEvent();
                 result.dataTableaHoliday = DataTableToJSON(dataTableaHoliday);
                 result.dataTableEvents = DataTableToJSON(dataTableEvents);
-
-                
 
                 var status = new ResultModel
                 {
@@ -109,6 +107,7 @@ namespace WebApplication3.Controllers
         }
         public static string DataTableToJSON(DataTable table)
         {
+            System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-Us");
             JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
             List<Dictionary<string, object>> parentRow = new List<Dictionary<string, object>>();
             Dictionary<string, object> childRow;
@@ -119,7 +118,7 @@ namespace WebApplication3.Controllers
                 {
                     if (col.DataType == typeof(DateTime))
                     {
-                        childRow.Add(col.ColumnName, row[col].ToString());
+                        childRow.Add(col.ColumnName, Convert.ToDateTime(row[col].ToString()).ToString("d/M/yyyy", _cultureInfo));
                     }
                     else
                     {
@@ -131,89 +130,162 @@ namespace WebApplication3.Controllers
             return jsSerializer.Serialize(parentRow);
         }
 
-
-
-
-        //public JsonResult WelcomeNote()
-        //{
-        //    bool isAdmin = false;
-        //TODO: Check the user if it is admin or normal user, (true - Admin, false - Normal user)  
-        //    string output = isAdmin ? "Welcome to the Admin User" : "Welcome to the User";
-
-        //    return Json(output, JsonRequestBehavior.AllowGet);
-        //}
-
         [HttpPost]
-        public ActionResult Holiday(DataHolidayAndEvent model)
+        public ActionResult AddHoliday(DataHolidayAndEvent model)
         {
-            DataTable dtable = new DataTable();
-
-            var sql = @"insert into Dtb_Holiday values (@Day_Holiday, @Details)";
-
-            using (SqlConnection con = new SqlConnection(sqlConn))
+            try
             {
-                con.Open();
+                var sql = @"insert into Dtb_Holiday values (@Day_Holiday, @Details)";
 
-
-                using (var cmd = new SqlCommand(sql, con))
+                using (SqlConnection con = new SqlConnection(sqlConn))
                 {
-                    cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-                    cmd.Parameters.AddWithValue("@Details", model.Holidayname);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
+                    con.Open();
+                    using (var cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+                        cmd.Parameters.AddWithValue("@Details", model.Details);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
                 }
-            }
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = null
+                };
 
-            return View();
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+
+            }
+            catch (Exception ex) 
+            {
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = ex.Message.ToString()
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }            
         }
 
-        //[HttpPut]
-        //public ActionResult UpdateEventHoliday(DataHolidayAndEvent model)
-        //{
-        //    DataTable dtable = new DataTable();
+        [HttpPut]
+        public ActionResult UpdateHoliday(DataHolidayAndEvent model)
+        {
+            try
+            {
+                var sql = @"UPDATE [dbo].[Dtb_Holiday]
+                        SET [Day_Holiday] = @dayHoliday
+                        ,[Details] = @details
+                        WHERE Day_Holiday = @dayHoliday";
 
-        //    var sql = @"update Dtb_Holiday set (@Day_Holiday, @Details)";
-
-        //    using (SqlConnection con = new SqlConnection(sqlConn))
-        //    {
-        //        con.Open();
-
-
-        //        using (var cmd = new SqlCommand(sql, con))
-        //        {
-        //            cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-        //            cmd.Parameters.AddWithValue("@Details", model.Holidayname);
-        //            cmd.ExecuteNonQuery();
-        //            con.Close();
-        //        }
-        //    }
-
-        //    return View();
-        //}
-
-        //[HttpDelete]
-        //public ActionResult EventHoliday(DataHolidayAndEvent model)
-        //{
-        //    DataTable dtable = new DataTable();
-
-        //    var sql = @"delete from Dtb_Holiday where day (@Day_Holiday) = @day ";
-
-        //    using (SqlConnection con = new SqlConnection(sqlConn))
-        //    {
-        //        con.Open();
+                using (SqlConnection con = new SqlConnection(sqlConn))
+                {
+                    con.Open();
 
 
-        //        using (var cmd = new SqlCommand(sql, con))
-        //        {
-        //            cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-        //            cmd.Parameters.AddWithValue("@Details", model.Holidayname);
-        //            cmd.ExecuteNonQuery();
-        //            con.Close();
-        //        }
-        //    }
+                    using (var cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+                        cmd.Parameters.AddWithValue("@Details", model.Details);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = null
+                };
 
-        //    return View();
-        //}
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+            catch (Exception ex)
+            {
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = ex.Message.ToString()
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteHoliday(DataHolidayAndEvent model)
+        {
+            try
+            {
+                var sql = @"delete from Dtb_Holiday where @Day_Holiday = @dayHoliday";
+
+                using (SqlConnection con = new SqlConnection(sqlConn))
+                {
+                    con.Open();
+
+
+                    using (var cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = null
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+            catch (Exception ex)
+            {
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = ex.Message.ToString()
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+        }
 
         //[HttpPost]
         //public ActionResult EventsDay(DataHolidayAndEvent model)
