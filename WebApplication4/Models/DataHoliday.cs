@@ -6,7 +6,7 @@ using System.Web;
 
 namespace WebApplication4.Models
 {
-    public class DataHolidayAndEvent
+    public class DataHoliday
     {
         public string dataTableaHoliday { get; set; }
         public string dataTableEvents { get; set; }

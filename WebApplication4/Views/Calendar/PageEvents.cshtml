@@ -35,10 +35,10 @@
     $(document).ready(function () {
         /*var queryDate = '1/1/2022';*/
         var queryDate = null;
-        
+
         /*queryDate = '1/1/' + currentYear;*/
-        
-        
+
+
         $(function () {
             $("#year").change(function () {
                 $('#datepicker').datepicker("destroy");
@@ -63,7 +63,7 @@
             $.ajax({
                 url: '@Url.Action("getEventday", "Calendar")',
                 type: "POST",
-                data: JSON.stringify(dataHoliday),
+                data: JSON.stringify(dataEvents),
                 dataType: "json",
                 contentType: "application/json",
                 beforeSend: function () {
@@ -77,33 +77,21 @@
 
                             if (dataHoliday != null)
                             {
-                                $('#datepicker').datepicker({
-                                    beforeShowDay: function (date) {
-                                        return setHoliday(date, dataHoliday);
-                                    }
-                                    ,defaultDate: queryDate
-                                });
-                            }
-                            //if (dataEvents != null) {
-                                
-                            //    for (let i = 0; i < dataEvents.length; i++) {
-                            //        addEvent(dataEvents[i].EventDate, dataEvents[i].EventName);
+                                for (let i = 0; i < dataHoliday.length; i++) {
 
-                            //        //console.log(dataEvents[i].EventID);
-                            //        //console.log(dataEvents[i].EventDate);
-                            //    }
-                            //}
+                                    //console.log(dataEvents[i].EventID);
+                                    //console.log(dataEvents[i].EventDate);
+                                }
+                            }
                             if (dataEvents != null) {
-
                                 $('#datepicker').datepicker({
                                     beforeShowDay: function (date) {
-                                        return setEvent(date, dataEvents);
-                                    },
-                                    defaultDate: queryDate
+                                        return setEvents(date, dataEvents);
+                                    }
+                                    , defaultDate: queryDate
                                 });
                             }
-                            
-                            
+
                         }
                 },
                 complete: function () {
@@ -114,13 +102,15 @@
                 }
             });
         }
-        function setHoliday(date, jsonHoliday) {
+        
+
+        function setEvetns(date, jsonEvents) {
 
             const dates = [];
             const tips = [];
-            for (let i = 0; i < jsonHoliday.length; i++) {
-                dates.push(jsonHoliday[i].Day_Holiday);
-                tips.push(jsonHoliday[i].Details);
+            for (let i = 0; i < jsonEvents.length; i++) {
+                dates.push(jsonEvents[i].EventDate);
+                tips.push(jsonEvents[i].Subject);
             }
             var month = date.getMonth() + 1;
             var year = date.getFullYear();
@@ -133,31 +123,8 @@
             }
             return [true, ''];
         }
-        function setEvent(date, jsonEvents) {
-            const eventDates = [];
-            const eventTitles = [];
-
-            for (let i = 0; i < jsonEvents.length; i++) {
-                eventDates.push(jsonEvents[i].EventDate);
-                eventTitles.push(jsonEvents[i].EventTitle);
-            }
-
-            var month = date.getMonth() + 1;
-            var year = date.getFullYear();
-            var day = date.getDate();
-            var newDate = day + "/" + month + '/' + year;
-
-            for (var i = 0; i < eventDates.length; i++) {
-                if (eventDates[i].toString() == newDate) {
-                    return [true, 'highlight-event', eventTitles[i]];
-                }
-            }
-            return [true, ''];
-        }
     });
 
-    
-    
 </script>
 
 
@@ -173,6 +140,7 @@
         }
     </select>
 </div>
+
 
 
 

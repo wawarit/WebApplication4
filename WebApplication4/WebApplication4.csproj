@@ -125,7 +125,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\DataHolidayAndEvent.cs" />
+    <Compile Include="Models\DataEvents.cs" />
+    <Compile Include="Models\DataHoliday.cs" />
     <Compile Include="Models\EventCalendarModel.cs" />
     <Compile Include="Models\ResultModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -167,9 +168,18 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Calendar\Index.cshtml" />
+    <Content Include="Views\Calendar\Test.cshtml" />
+    <Content Include="Views\Calendar\AddHoliday.cshtml" />
+    <Content Include="Views\Calendar\UpdateHoliday.cshtml" />
+    <Content Include="Views\Calendar\DeleteHoliday.cshtml" />
+    <Content Include="Views\Calendar\AddEvents.cshtml" />
+    <Content Include="Views\Calendar\UpdateEvents.cshtml" />
+    <Content Include="Views\Calendar\DeleteEvents.cshtml" />
+    <Content Include="Views\Calendar\PageEvents.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\DataEvents\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

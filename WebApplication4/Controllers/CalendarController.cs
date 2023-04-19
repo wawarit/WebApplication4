@@ -19,6 +19,37 @@ namespace WebApplication3.Controllers
         {
             return View();
         }
+
+        public ActionResult Test()
+        {
+            return View();
+        }
+
+        public ActionResult AddHoliday()
+        {
+            return View();
+        }
+        public ActionResult UpdateHoliday()
+        {
+            return View();
+        }
+        public ActionResult DeleteHoliday()
+        {
+            return View();
+        }
+        public ActionResult AddEvents()
+        {
+            return View();
+        }
+        public ActionResult UpdateEvents()
+        {
+            return View();
+        }
+        public ActionResult DeleteEvents()
+        {
+            return View();
+        }
+
         [HttpPost]
         public JsonResult getEventday(EventCalendarModel model)
         {
@@ -69,7 +100,7 @@ namespace WebApplication3.Controllers
                     }
                 }
 
-                var result = new DataHolidayAndEvent();
+                var result = new DataHoliday();
                 result.dataTableaHoliday = DataTableToJSON(dataTableaHoliday);
                 result.dataTableEvents = DataTableToJSON(dataTableEvents);
 
@@ -131,7 +162,7 @@ namespace WebApplication3.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddHoliday(DataHolidayAndEvent model)
+        public ActionResult AddHoliday(DataHoliday model)
         {
             try
             {
@@ -178,11 +209,12 @@ namespace WebApplication3.Controllers
                     Details = string.Empty
                 }
                 });
-            }            
+            }
+            //return View();
         }
 
         [HttpPut]
-        public ActionResult UpdateHoliday(DataHolidayAndEvent model)
+        public ActionResult UpdateHoliday(DataHoliday model)
         {
             try
             {
@@ -234,10 +266,11 @@ namespace WebApplication3.Controllers
                 }
                 });
             }
+            //return View();
         }
 
         [HttpDelete]
-        public ActionResult DeleteHoliday(DataHolidayAndEvent model)
+        public ActionResult DeleteHoliday(DataHoliday model)
         {
             try
             {
@@ -285,6 +318,7 @@ namespace WebApplication3.Controllers
                 }
                 });
             }
+            //return View();
         }
 
         //[HttpPost]
@@ -311,10 +345,172 @@ namespace WebApplication3.Controllers
         //    return View();
         //}
 
+        [HttpPost]
+        public ActionResult AddEvents(DataEvents model)
+        {
+            try
+            {
+                var sql = @"insert into Dtb_Events values (@EventID, @EventDate, @StartTime, @EndTime, @Subject, @Detail, @Creator, @Status ,@CreateDatetime)";
+
+                using (SqlConnection con = new SqlConnection(sqlConn))
+                {
+                    con.Open();
+                    using (var cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@EventID", model.EventID);
+                        cmd.Parameters.AddWithValue("@EventDate", model.EventDate);
+                        cmd.Parameters.AddWithValue("@StartTime", model.StartTime);
+                        cmd.Parameters.AddWithValue("@EndTime", model.EndTime);
+                        cmd.Parameters.AddWithValue("@Subject", model.Subject);
+                        cmd.Parameters.AddWithValue("@Detail", model.Detail);
+                        cmd.Parameters.AddWithValue("@Creator", model.Creator);
+                        cmd.Parameters.AddWithValue("@Status", model.Status);
+                        cmd.Parameters.AddWithValue("@CreateDatetime", model.CreateDatetime);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = null
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+
+            }
+            catch (Exception ex)
+            {
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = ex.Message.ToString()
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+            //return View();
+        }
+
+        [HttpPut]
+        public ActionResult UpdateEvents(DataEvents model)
+        {
+            try
+            {
+                var sql = @"UPDATE [dbo].[Dtb_Events]
+                        SET [StartTime] = @startTime
+                        ,[EndTime] = @endtime
+                        WHERE EventID = @eventID";
+
+                using (SqlConnection con = new SqlConnection(sqlConn))
+                {
+                    con.Open();
 
 
+                    using (var cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@StartTime", model.StartTime);
+                        cmd.Parameters.AddWithValue("@EndTime", model.EndTime);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = null
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+            catch (Exception ex)
+            {
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = ex.Message.ToString()
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+            //return View();
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteEvents(DataEvents model)
+        {
+            try
+            {
+                var sql = @"delete from Dtb_Events where @EventID = @eventID";
+
+                using (SqlConnection con = new SqlConnection(sqlConn))
+                {
+                    con.Open();
 
 
+                    using (var cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@EventID", model.EventID);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = null
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+            catch (Exception ex)
+            {
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = ex.Message.ToString()
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+            //return View();
+        }
 
     }
 }
