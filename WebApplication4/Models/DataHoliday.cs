@@ -10,7 +10,7 @@ namespace WebApplication4.Models
     {
         public string dataTableaHoliday { get; set; }
         public string dataTableEvents { get; set; }
-        public string Holiday { get; set; }
+        public DateTime Holiday { get; set; }
         public string Details { get; set; }
         //public string codeEventsday { get; set; }
         //public string Eventsday { get; set; }

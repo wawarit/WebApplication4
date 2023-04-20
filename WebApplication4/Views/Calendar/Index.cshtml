@@ -4,6 +4,8 @@
     Layout = null;
 }
 
+
+
 <style media="screen">
     .container {
         border: 0px solid darkgrey;
@@ -16,6 +18,11 @@
     .hightligh a {
         background: #FF0000 !important;
         color: #FFFF00 !important;
+    }
+
+    .highlight-event a {
+        background: #32cd32 !important;
+        color: #000000 !important;
     }
 
 
@@ -31,14 +38,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 
 
+
 <script>
     $(document).ready(function () {
         /*var queryDate = '1/1/2022';*/
         var queryDate = null;
-        
+
         /*queryDate = '1/1/' + currentYear;*/
-        
-        
+
+
         $(function () {
             $("#year").change(function () {
                 $('#datepicker').datepicker("destroy");
@@ -71,40 +79,22 @@
                 },
                 success: function (json) {
 
-                        if ((json[0].Status.Status) && (json[0].Status.Success)) {
-                            var dataHoliday = JSON.parse(json[0].Details.dataTableaHoliday);
-                            var dataEvents = JSON.parse(json[0].Details.dataTableEvents);
+                    if ((json[0].Status.Status) && (json[0].Status.Success)) {
+                        
+                        var listDataTableaHoliday = json[0].Details.dataTableaHoliday;
+                        var listDataTableEvents = json[0].Details.dataTableEvents
+                        var dataHoliday = JSON.parse(listDataTableaHoliday);
+                        var dataEvents = JSON.parse(listDataTableEvents);
 
-                            if (dataHoliday != null)
-                            {
-                                $('#datepicker').datepicker({
-                                    beforeShowDay: function (date) {
-                                        return setHoliday(date, dataHoliday);
-                                    }
-                                    ,defaultDate: queryDate
-                                });
+                        $('#datepicker').datepicker({
+                            beforeShowDay: function (date) {
+                                return setHoliday(date, dataHoliday, dataEvents);
                             }
-                            //if (dataEvents != null) {
-                                
-                            //    for (let i = 0; i < dataEvents.length; i++) {
-                            //        addEvent(dataEvents[i].EventDate, dataEvents[i].EventName);
-
-                            //        //console.log(dataEvents[i].EventID);
-                            //        //console.log(dataEvents[i].EventDate);
-                            //    }
-                            //}
-                            if (dataEvents != null) {
-
-                                $('#datepicker').datepicker({
-                                    beforeShowDay: function (date) {
-                                        return setEvent(date, dataEvents);
-                                    },
-                                    defaultDate: queryDate
-                                });
-                            }
+                            ,defaultDate: queryDate
+                        });
                             
                             
-                        }
+                    }
                 },
                 complete: function () {
                     //$(".loading").hide();
@@ -114,57 +104,59 @@
                 }
             });
         }
-        function setHoliday(date, jsonHoliday) {
-
-            const dates = [];
-            const tips = [];
-            for (let i = 0; i < jsonHoliday.length; i++) {
-                dates.push(jsonHoliday[i].Day_Holiday);
-                tips.push(jsonHoliday[i].Details);
-            }
-            var month = date.getMonth() + 1;
-            var year = date.getFullYear();
-            var day = date.getDate();
-            var newdate = day + "/" + month + '/' + year;
-            for (var i = 0; i < dates.length; i++) {
-                if (dates[i].toString() == newdate) {
-                    return [true, 'hightligh', tips[i]];
+        function setHoliday(date, jsonHoliday,jsonEvents) {
+            
+            if (jsonHoliday != null)
+            {
+                const dates = [];
+                const tips = [];
+                for (let i = 0; i < jsonHoliday.length; i++) {
+                    dates.push(jsonHoliday[i].Day_Holiday);
+                    tips.push(jsonHoliday[i].Details);
+                }
+                var month = date.getMonth() + 1;
+                var year = date.getFullYear();
+                var day = date.getDate();
+                var newdate = day + "/" + month + '/' + year;
+                for (var i = 0; i < dates.length; i++) {
+                    if (dates[i].toString() == newdate) {
+                        return [true, 'hightligh', tips[i]];
+                    }
                 }
             }
-            return [true, ''];
-        }
-        function setEvent(date, jsonEvents) {
-            const eventDates = [];
-            const eventTitles = [];
+            
+            if (jsonEvents != null)
+            {
+                const eventDates = [];
+                const eventTitles = [];
 
-            for (let i = 0; i < jsonEvents.length; i++) {
-                eventDates.push(jsonEvents[i].EventDate);
-                eventTitles.push(jsonEvents[i].EventTitle);
-            }
-
-            var month = date.getMonth() + 1;
-            var year = date.getFullYear();
-            var day = date.getDate();
-            var newDate = day + "/" + month + '/' + year;
-
-            for (var i = 0; i < eventDates.length; i++) {
-                if (eventDates[i].toString() == newDate) {
-                    return [true, 'highlight-event', eventTitles[i]];
+                for (let i = 0; i < jsonEvents.length; i++) {
+                    eventDates.push(jsonEvents[i].EventDate);
+                    eventTitles.push(jsonEvents[i].Subject);
                 }
-            }
+
+                var month = date.getMonth() + 1;
+                var year = date.getFullYear();
+                var day = date.getDate();
+                var newDate = day + "/" + month + '/' + year;
+
+                for (var i = 0; i < eventDates.length; i++) {
+                    if (eventDates[i].toString() == newDate) {
+                        return [true, 'highlight-event', eventTitles[i]];
+                    }
+                }
+            }           
+
             return [true, ''];
         }
+  
     });
 
-    
-    
+
+
 </script>
 
-
 <div class='container'>
-    <div id="datepicker"></div>
-    @*<input type="date" id="dtFrom" name="dtFrom" />
-        <button id="DateChanger">Click</button>*@
     <select id="year">
         @for (int year = DateTime.Now.Year; year >= 2021; year--)
         {
@@ -172,7 +164,16 @@
 
         }
     </select>
+
+    <div id="datepicker"></div>
+    @*<input type="date" id="dtFrom" name="dtFrom" />
+        <button id="DateChanger">Click</button>*@
+
 </div>
+
+
+
+
 
 
 

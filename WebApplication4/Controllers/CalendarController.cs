@@ -50,6 +50,35 @@ namespace WebApplication3.Controllers
             return View();
         }
 
+        public ActionResult ViewHoliday()
+        {
+            var result = new List<DataHoliday>();
+            DataTable dataTableaHoliday = new DataTable();
+            var getDataHoliday = "SELECT * FROM [Dtb_Holiday] ";
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (var cmd = new SqlCommand(getDataHoliday, con))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read()) 
+                    {
+                        result.Add(TodDataHolidayListModel(reader));
+                    }
+                    con.Close();
+                }
+            }
+            return View(result);
+        }
+
+        public DataHoliday TodDataHolidayListModel(SqlDataReader dataReader) 
+        {
+            DataHoliday model = new DataHoliday();
+            model.Holiday = Convert.ToDateTime(dataReader["Day_Holiday"] == DBNull.Value ? null : dataReader["Day_Holiday"].ToString());
+            model.Details = dataReader["Details"] == DBNull.Value ? null : dataReader["Details"].ToString();
+            return model;
+        }
+
         [HttpPost]
         public JsonResult getEventday(EventCalendarModel model)
         {
@@ -513,4 +542,5 @@ namespace WebApplication3.Controllers
         }
 
     }
+
 }

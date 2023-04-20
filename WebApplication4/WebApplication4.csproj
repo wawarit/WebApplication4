@@ -169,13 +169,13 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Calendar\Index.cshtml" />
     <Content Include="Views\Calendar\Test.cshtml" />
-    <Content Include="Views\Calendar\AddHoliday.cshtml" />
-    <Content Include="Views\Calendar\UpdateHoliday.cshtml" />
-    <Content Include="Views\Calendar\DeleteHoliday.cshtml" />
     <Content Include="Views\Calendar\AddEvents.cshtml" />
     <Content Include="Views\Calendar\UpdateEvents.cshtml" />
     <Content Include="Views\Calendar\DeleteEvents.cshtml" />
-    <Content Include="Views\Calendar\PageEvents.cshtml" />
+    <Content Include="Views\Calendar\AddHoliday.cshtml" />
+    <Content Include="Views\Calendar\DeleteHoliday.cshtml" />
+    <Content Include="Views\Calendar\UpdateHoliday.cshtml" />
+    <None Include="Views\Calendar\ViewHoliday.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
