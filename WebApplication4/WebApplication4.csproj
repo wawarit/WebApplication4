@@ -175,6 +175,8 @@
     <Content Include="Views\Calendar\AddHoliday.cshtml" />
     <Content Include="Views\Calendar\DeleteHoliday.cshtml" />
     <Content Include="Views\Calendar\UpdateHoliday.cshtml" />
+    <Content Include="Views\Calendar\Events1.cshtml" />
+    <Content Include="Views\Calendar\ViewEvents.cshtml" />
     <None Include="Views\Calendar\ViewHoliday.cshtml" />
   </ItemGroup>
   <ItemGroup>

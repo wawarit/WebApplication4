@@ -1,9 +1,11 @@
 ﻿@model IEnumerable<WebApplication4.Models.DataHoliday>
 
- <br /><br />
+<br />
+<br />
 <p>
     @Html.ActionLink("Create New", "AddHoliday")
 </p>
+
 <table class="table">
     <tr>
 
@@ -16,20 +18,25 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
+    @foreach (var item in Model)
+    {
+        <tr>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.Holiday)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Details)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "UpdateHoliday", new {  id= 1 }) |
-            @Html.ActionLink("Delete", "DeleteHoliday", new {  id= 1 })
-        </td>
-    </tr>
-}
+            <td>
+                @Html.DisplayFor(modelItem => item.Holiday) 
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Details)
+                
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "UpdateHoliday", new { id = item.Details }) 
+
+                @Html.ActionLink("Delete", "DeleteHoliday", new { id = item.Details })
+            </td>
+        </tr>
+    }
 
 </table>
+
+

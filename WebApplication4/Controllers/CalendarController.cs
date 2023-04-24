@@ -50,6 +50,11 @@ namespace WebApplication3.Controllers
             return View();
         }
 
+        public ActionResult Events1()
+        {
+            return View();
+        }
+
         public ActionResult ViewHoliday()
         {
             var result = new List<DataHoliday>();
@@ -72,6 +77,35 @@ namespace WebApplication3.Controllers
         }
 
         public DataHoliday TodDataHolidayListModel(SqlDataReader dataReader) 
+        {
+            DataHoliday model = new DataHoliday();
+            model.Holiday = Convert.ToDateTime(dataReader["Day_Holiday"] == DBNull.Value ? null : dataReader["Day_Holiday"].ToString());
+            model.Details = dataReader["Details"] == DBNull.Value ? null : dataReader["Details"].ToString();
+            return model;
+        }
+
+        public ActionResult ViewEvents()
+        {
+            var result = new List<DataHoliday>();
+            DataTable dataTableaEvents = new DataTable();
+            var getDataEvents = "SELECT * FROM [Dtb_Events] ";
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (var cmd = new SqlCommand(getDataEvents, con))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result.Add(TodDataEventsListModel(reader));
+                    }
+                    con.Close();
+                }
+            }
+            return View(result);
+        }
+
+        public DataHoliday TodDataEventsListModel(SqlDataReader dataReader)
         {
             DataHoliday model = new DataHoliday();
             model.Holiday = Convert.ToDateTime(dataReader["Day_Holiday"] == DBNull.Value ? null : dataReader["Day_Holiday"].ToString());
@@ -347,32 +381,8 @@ namespace WebApplication3.Controllers
                 }
                 });
             }
-            //return View();
+            
         }
-
-        //[HttpPost]
-        //public ActionResult EventsDay(DataHolidayAndEvent model)
-        //{
-        //    DataTable dtable = new DataTable();
-
-        //    var sql = @"insert into Dtb_Holiday values (@Day_Holiday, @Details)";
-
-        //    using (SqlConnection con = new SqlConnection(sqlConn))
-        //    {
-        //        con.Open();
-
-
-        //        using (var cmd = new SqlCommand(sql, con))
-        //        {
-        //            cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-        //            cmd.Parameters.AddWithValue("@Details", model.Holidayname);
-        //            cmd.ExecuteNonQuery();
-        //            con.Close();
-        //        }
-        //    }
-
-        //    return View();
-        //}
 
         [HttpPost]
         public ActionResult AddEvents(DataEvents model)
