@@ -1,0 +1,51 @@
+﻿@model IEnumerable<WebApplication4.Models.DataHoliday>
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>View</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.dataTableaHoliday)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dataTableEvents)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Holiday)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Details)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.dataTableaHoliday)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dataTableEvents)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Holiday)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Details)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

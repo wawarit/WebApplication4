@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Glimpse.Ado.Tab;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.Remoting.Contexts;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebApplication4.Models;
@@ -26,6 +28,10 @@ namespace WebApplication3.Controllers
         }
 
         public ActionResult AddHoliday()
+        {
+            return View();
+        }
+        public ActionResult ReadHoliday()
         {
             return View();
         }
@@ -54,7 +60,10 @@ namespace WebApplication3.Controllers
         {
             return View();
         }
-
+        public ActionResult Update()
+        {
+            return View();
+        }
         public ActionResult ViewHoliday()
         {
             var result = new List<DataHoliday>();
@@ -63,7 +72,7 @@ namespace WebApplication3.Controllers
             using (SqlConnection con = new SqlConnection(sqlConn))
             {
                 con.Open();
-                using (var cmd = new SqlCommand(getDataHoliday, con))
+                using (SqlCommand cmd = new SqlCommand(getDataHoliday, con))
                 {
                     var reader = cmd.ExecuteReader();
                     while (reader.Read()) 
@@ -224,7 +233,7 @@ namespace WebApplication3.Controllers
             return jsSerializer.Serialize(parentRow);
         }
 
-        [HttpPost]
+        [HttpPost] //Add
         public ActionResult AddHoliday(DataHoliday model)
         {
             try
@@ -276,7 +285,62 @@ namespace WebApplication3.Controllers
             //return View();
         }
 
-        [HttpPut]
+        [HttpGet] // Set the attribute to Read
+        public ActionResult ReadHoliday(DataHoliday model)
+
+        {
+            try
+            {
+                var sql = @"select * from Dtb_Holiday";
+
+                using (SqlConnection con = new SqlConnection(sqlConn))
+                {
+                    con.Open();
+
+
+                    using (var cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+                        cmd.Parameters.AddWithValue("@Details", model.Details);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+
+                }
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = null
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+
+            }
+            catch (Exception ex)
+            {
+                var status = new ResultModel
+                {
+                    Status = new HttpStatusCodeResult(200),
+                    Success = true,
+                    Message = ex.Message.ToString()
+                };
+
+                return Json(new[] { new
+                {
+                    Status  = status,
+                    Details = string.Empty
+                }
+                });
+            }
+        }
+
+        [HttpPut] //update
         public ActionResult UpdateHoliday(DataHoliday model)
         {
             try
@@ -298,7 +362,15 @@ namespace WebApplication3.Controllers
                         cmd.ExecuteNonQuery();
                         con.Close();
                     }
+
                 }
+                //using (var context = new demoCalendarEntities())
+                //{
+                //    var data = model.Details.where(" @Details = @Details ",).Details();
+                //    return View(data);
+                //}
+
+
                 var status = new ResultModel
                 {
                     Status = new HttpStatusCodeResult(200),
@@ -330,7 +402,38 @@ namespace WebApplication3.Controllers
                 });
             }
             //return View();
+            
         }
+
+        //จังหวะกดแก้ไขในหน้า view data ส่งวันไปแก้ไข เพราะ table นี้ไม่มี ID
+        public ActionResult Update(DateTime Day_Holiday)
+        {
+            //แก้ไข
+           
+            var ViewHoliday = "select * from Dtb_Holiday where @Day_Holiday";
+            
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(ViewHoliday, con))
+                {
+                    var reader = cmd.ExecuteReader();
+                    con.Close();
+                }
+            }
+            return View(ViewHoliday);
+        }
+        
+        //ลบไม่มีเพราะไม่มี id 
+        public ActionResult Update1(DateTime Day_Holiday)
+        {
+            //แก้ไข
+
+            var ViewHoliday = "UPDATE[dbo].[Dtb_Holiday] SET @Day_Holiday = 'ข้อมูล' , Details = 'รายละเอียด' WHERE Day_Holiday";
+
+            return View(ViewHoliday);
+        }
+
 
         [HttpDelete]
         public ActionResult DeleteHoliday(DataHoliday model)
@@ -550,6 +653,28 @@ namespace WebApplication3.Controllers
             }
             //return View();
         }
+        public JsonResult GetData()
+        {
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT Day_Holiday, Details FROM Dtb_Holiday", con))
+                {
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    List<object> data = new List<object>();
+                    while (reader.Read())
+                    {
+                        data.Add(new
+                        {
+                            Day_Holiday = reader["Day_Holiday"],
+                            Details = reader["Details"]
+                        });
+                    }
+                    return Json(data, JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
+
 
     }
 

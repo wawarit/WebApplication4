@@ -80,7 +80,7 @@
                 success: function (json) {
 
                     if ((json[0].Status.Status) && (json[0].Status.Success)) {
-                        
+
                         var listDataTableaHoliday = json[0].Details.dataTableaHoliday;
                         var listDataTableEvents = json[0].Details.dataTableEvents
                         var dataHoliday = JSON.parse(listDataTableaHoliday);
@@ -92,8 +92,8 @@
                             }
                             ,defaultDate: queryDate
                         });
-                            
-                            
+
+
                     }
                 },
                 complete: function () {
@@ -105,7 +105,7 @@
             });
         }
         function setHoliday(date, jsonHoliday,jsonEvents) {
-            
+
             if (jsonHoliday != null)
             {
                 const dates = [];
@@ -124,7 +124,7 @@
                     }
                 }
             }
-            
+
             if (jsonEvents != null)
             {
                 const eventDates = [];
@@ -145,12 +145,13 @@
                         return [true, 'highlight-event', eventTitles[i]];
                     }
                 }
-            }           
+            }
 
             return [true, ''];
         }
-  
+
     });
+
 
 
 
@@ -168,10 +169,73 @@
     <div id="datepicker"></div>
     @*<input type="date" id="dtFrom" name="dtFrom" />
         <button id="DateChanger">Click</button>*@
-    
-    
+
+
 
 </div>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ThaiCreate.Com</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // retrieve data from the database and add it to the table
+            $.ajax({
+                type: "GET",
+                url: "/Home/GetData", // replace with the URL of your server-side code that retrieves the data from the database
+                success: function (data) {
+                    $.each(data, function (index, item) {
+                        var tr = "<tr>";
+                        tr = tr + "<td>" + item.Day_Holiday + "</td>";
+                        tr = tr + "<td>" + item.Details + "</td>";
+                        tr = tr + "</tr>";
+                        $('#myTable > tbody:last').append(tr);
+                    });
+                },
+                error: function (data) {
+                    alert("Error retrieving data from database.");
+                }
+            });
+
+            $("#deleteRows").click(function () {
+                if ($("#myTable tr").length != 1) {
+                    $("#myTable tr:last").remove();
+                }
+            });
+
+            $("#clearRows").click(function () {
+                $('#myTable > tbody:last').empty(); // remove all
+            });
+
+    </script>
+    <meta charset=utf-8 />
+</head>
+<body>
+    <center>
+        <h1>Calendar</h1>
+
+        <table width="600" border="1" id="myTable">
+            <!-- head table -->
+            <thead>
+                <tr>
+                    <td width="91"> <div align="center">Day_Holiday </div></td>
+                    <td width="98"> <div align="center">Details </div></td>
+            </thead>
+            <!-- body dynamic rows -->
+            <tbody></tbody>
+        </table>
+        <br />
+        <input type="button" id="deleteRows" value="Delete Last Row">
+        <input type="button" id="clearRows" value="Clear Table">
+        <center>
+</body>
+</html>
+
+
+
 
 
 
