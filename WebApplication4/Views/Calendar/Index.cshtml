@@ -4,8 +4,6 @@
     Layout = null;
 }
 
-
-
 <style media="screen">
     .container {
         border: 0px solid darkgrey;
@@ -36,8 +34,6 @@
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-
-
 
 <script>
     $(document).ready(function () {
@@ -182,11 +178,12 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            // retrieve data from the database and add it to the table
+    // retrieve data from the server-side code and add it to the table
             $.ajax({
+                url: '@Url.Action("GetData", "Calendar")',
                 type: "GET",
-                url: "/Home/GetData", // replace with the URL of your server-side code that retrieves the data from the database
                 success: function (data) {
+                // iterate over the array of objects and create a row for each one
                     $.each(data, function (index, item) {
                         var tr = "<tr>";
                         tr = tr + "<td>" + item.Day_Holiday + "</td>";
@@ -200,15 +197,9 @@
                 }
             });
 
-            $("#deleteRows").click(function () {
-                if ($("#myTable tr").length != 1) {
-                    $("#myTable tr:last").remove();
-                }
-            });
+            // code for deleteRows and clearRows buttons is the same as before
+        });
 
-            $("#clearRows").click(function () {
-                $('#myTable > tbody:last').empty(); // remove all
-            });
 
     </script>
     <meta charset=utf-8 />

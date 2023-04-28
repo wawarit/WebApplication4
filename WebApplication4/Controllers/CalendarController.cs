@@ -116,9 +116,16 @@ namespace WebApplication3.Controllers
 
         public DataHoliday TodDataEventsListModel(SqlDataReader dataReader)
         {
-            DataHoliday model = new DataHoliday();
-            model.Holiday = Convert.ToDateTime(dataReader["Day_Holiday"] == DBNull.Value ? null : dataReader["Day_Holiday"].ToString());
-            model.Details = dataReader["Details"] == DBNull.Value ? null : dataReader["Details"].ToString();
+            DataEvents model = new DataEvents();
+            model.EventID = Convert.ToInt16(dataReader["EventID"] == DBNull.Value ? null : dataReader["EventID"].ToString());
+            model.EventDate = Convert.ToDateTime(dataReader["EventDate"] == DBNull.Value ? null : dataReader["EventDate"].ToString());
+            model.StartTime = Convert.ToDateTime(dataReader["StartTime"] == DBNull.Value ? null : dataReader["StartTime"].ToString());
+            model.EndTime = Convert.ToDateTime(dataReader["EndTime"] == DBNull.Value ? null : dataReader["EndTime"].ToString());
+            model.Subject = dataReader["Subject"] == DBNull.Value ? null : dataReader["Subject"].ToString();
+            model.Detail = dataReader["Detail"] == DBNull.Value ? null : dataReader["Detail"].ToString();
+            model.Creator = dataReader["Creator"] == DBNull.Value ? null : dataReader["Creator"].ToString();
+            model.Status = Convert.ToBoolean(dataReader["Status"] == DBNull.Value ? null : dataReader["Status"].ToString());
+            model.CreateDatetime = Convert.ToDateTime(dataReader["CreateDatetime"] == DBNull.Value ? null : dataReader["CreateDatetime"].ToString());
             return model;
         }
 
@@ -410,7 +417,7 @@ namespace WebApplication3.Controllers
         {
             //แก้ไข
            
-            var ViewHoliday = "select * from Dtb_Holiday where @Day_Holiday";
+            var ViewHoliday = "select * from Dtb_Holiday where Day_Holiday = @dayHoliday";
             
             using (SqlConnection con = new SqlConnection(sqlConn))
             {
@@ -429,8 +436,34 @@ namespace WebApplication3.Controllers
         {
             //แก้ไข
 
-            var ViewHoliday = "UPDATE[dbo].[Dtb_Holiday] SET @Day_Holiday = 'ข้อมูล' , Details = 'รายละเอียด' WHERE Day_Holiday";
+            var ViewHoliday = "UPDATE[dbo].[Dtb_Holiday] SET Day_Holiday = '@Day_Holiday' , Details = '@Details' WHERE Day_Holiday = @dayHoliday";
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(ViewHoliday, con))
+                {
+                    var reader = cmd.ExecuteReader();
+                    con.Close();
+                }
+            }
+            return View(ViewHoliday);
+        }
 
+        //delete update ตรงหน้า view เชื่อมกับ public 2 อันบน
+        public ActionResult Delete(DateTime Day_Holiday)
+        {
+            //แก้ไข
+
+            var ViewHoliday = "UPDATE [dbo].[Dtb_Holiday] SET Status = '0' WHERE Day_Holiday = @dayHoliday";
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(ViewHoliday, con))
+                {
+                    var reader = cmd.ExecuteReader();
+                    con.Close();
+                }
+            }
             return View(ViewHoliday);
         }
 
@@ -440,7 +473,7 @@ namespace WebApplication3.Controllers
         {
             try
             {
-                var sql = @"delete from Dtb_Holiday where @Day_Holiday = @dayHoliday";
+                var sql = @"delete from Dtb_Holiday where Day_Holiday = @dayHoliday";
 
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
@@ -653,8 +686,11 @@ namespace WebApplication3.Controllers
             }
             //return View();
         }
+
+        [HttpGet]
         public JsonResult GetData()
         {
+
             using (SqlConnection con = new SqlConnection(sqlConn))
             {
                 con.Open();

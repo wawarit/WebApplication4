@@ -202,6 +202,7 @@
     <Content Include="Views\Calendar\ViewEvents.cshtml" />
     <Content Include="Views\Calendar\ReadHoliday.cshtml" />
     <Content Include="Views\Calendar\View.cshtml" />
+    <Content Include="Views\Calendar\Update.cshtml" />
     <None Include="Views\Calendar\ViewHoliday.cshtml" />
   </ItemGroup>
   <ItemGroup>
