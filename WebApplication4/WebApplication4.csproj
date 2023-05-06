@@ -143,12 +143,15 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\KnowldegeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DataEvents.cs" />
     <Compile Include="Models\DataHoliday.cs" />
     <Compile Include="Models\EventCalendarModel.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\Holiday.cs" />
     <Compile Include="Models\ResultModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation\MVC5\ViewAsPdf.cs" />
@@ -197,17 +200,24 @@
     <Content Include="Views\Calendar\DeleteEvents.cshtml" />
     <Content Include="Views\Calendar\AddHoliday.cshtml" />
     <Content Include="Views\Calendar\DeleteHoliday.cshtml" />
-    <Content Include="Views\Calendar\UpdateHoliday.cshtml" />
     <Content Include="Views\Calendar\Events1.cshtml" />
     <Content Include="Views\Calendar\ViewEvents.cshtml" />
     <Content Include="Views\Calendar\ReadHoliday.cshtml" />
     <Content Include="Views\Calendar\View.cshtml" />
+    <Content Include="Views\Calendar\ViewCalendar.cshtml" />
     <Content Include="Views\Calendar\Update.cshtml" />
+    <Content Include="Views\Calendar\Testview.cshtml" />
+    <Content Include="Views\Calendar\UpdateHoliday.cshtml" />
     <None Include="Views\Calendar\ViewHoliday.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\AppDbContext\" />
     <Folder Include="Views\DataEvents\" />
+    <Folder Include="Views\File\" />
+    <Folder Include="Views\Holiday\" />
+    <Folder Include="Views\Knowldege\" />
+    <Folder Include="Views\UpdateandDelete\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

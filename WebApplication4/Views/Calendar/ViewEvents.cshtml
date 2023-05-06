@@ -8,45 +8,39 @@
 
 <table class="table">
     <tr>
-
-        <th>
-            @Html.DisplayNameFor(model => model.EventDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Subject)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Detail)
-        </th>
+        <th> </th>
+        <th>@Html.DisplayNameFor(model => model.EventDate)</th>
+        <th>@Html.DisplayNameFor(model => model.StartTime)</th>
+        <th>@Html.DisplayNameFor(model => model.EndTime)</th>
+        <th>@Html.DisplayNameFor(model => model.Subject)</th>
         <th></th>
     </tr>
 
-    @*@foreach (var item in Model)
+    @*เพิ่มลำดับ*@
+    @{
+        int counter = 1;
+    }
+
+    @foreach (var item in Model)
     {
         <tr>
-
+            <td>@counter</td>
+            @{
+                counter++;
+            }
+            <td>@Html.DisplayFor(modelItem => item.EventDate)</td>
+            <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
+            <td>@Html.DisplayFor(modelItem => item.EndTime)</td>
+            <td>@Html.DisplayFor(modelItem => item.Subject)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.Holiday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Details)
-
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "UpdateHoliday", new { id = item.Details })
-
-                @Html.ActionLink("Delete", "DeleteHoliday", new { id = item.Details })
+                @Html.ActionLink("Edit", "UpdateEvents", new { id = item.EventID })
+                @Html.ActionLink("Delete", "DeleteEvents", new { id = item.EventID })
             </td>
         </tr>
-    }*@
+    }
 
 </table>
+
 
 
 

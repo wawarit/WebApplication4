@@ -8,7 +8,7 @@
 
 <table class="table">
     <tr>
-
+        <th> </th>
         <th>
             @Html.DisplayNameFor(model => model.Holiday)
         </th>
@@ -17,26 +17,38 @@
         </th>
         <th></th>
     </tr>
+     
+    @*เพิ่มลำดับ*@
+    @{
+        int counter = 1;
+    }
 
     @foreach (var item in Model)
     {
         <tr>
+            <td>
+                @counter
+                @{
+                    counter++;
+                }
+            </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.Holiday) 
+                @Html.DisplayFor(modelItem => item.Holiday)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Details)
-                
+
             </td>
             <td>
-                @Html.ActionLink("Edit", "UpdateHoliday", new { id = item.Details }) 
+                @Html.ActionLink("Edit", "UpdateHoliday", new { id = item.ID })
 
-                @Html.ActionLink("Delete", "DeleteHoliday", new { id = item.Details })
+                @Html.ActionLink("Delete", "DeleteHoliday", new { id = item.ID })
             </td>
         </tr>
     }
 
 </table>
+
 
 

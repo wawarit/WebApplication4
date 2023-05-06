@@ -49,7 +49,17 @@
                 var conceptName = $('#year').find(":selected").text();
                 higHlightDays(conceptName);
             });
+
         });
+        //$(function () {
+        //    $("#day").datepicker({
+        //        onSelect: function (date, datepicker) {
+        //            if (date != "") {
+        //                alert("Selected Date: " + date);
+        //            }
+        //        }
+        //    });
+        //});
 
         higHlightDays();
         function higHlightDays(year)
@@ -59,6 +69,7 @@
             }
             else {
                 queryDate = '1/1/' + year;
+                /*queryDate = day + month + year;*/
             }
             var dataHoliday =
             {
@@ -74,7 +85,7 @@
 
                 },
                 success: function (json) {
-
+                    console.log(json);
                     if ((json[0].Status.Status) && (json[0].Status.Success)) {
 
                         var listDataTableaHoliday = json[0].Details.dataTableaHoliday;
@@ -100,6 +111,8 @@
                 }
             });
         }
+
+
         function setHoliday(date, jsonHoliday,jsonEvents) {
 
             if (jsonHoliday != null)
@@ -148,12 +161,10 @@
 
     });
 
-
-
-
 </script>
 
 <div class='container'>
+
     <select id="year">
         @for (int year = DateTime.Now.Year; year >= 2021; year--)
         {
@@ -162,68 +173,248 @@
         }
     </select>
 
-    <div id="datepicker"></div>
-    @*<input type="date" id="dtFrom" name="dtFrom" />
-        <button id="DateChanger">Click</button>*@
 
+    <div id="datepicker"></div>
 
 
 </div>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>ThaiCreate.Com</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-    // retrieve data from the server-side code and add it to the table
-            $.ajax({
-                url: '@Url.Action("GetData", "Calendar")',
-                type: "GET",
-                success: function (data) {
-                // iterate over the array of objects and create a row for each one
-                    $.each(data, function (index, item) {
-                        var tr = "<tr>";
-                        tr = tr + "<td>" + item.Day_Holiday + "</td>";
-                        tr = tr + "<td>" + item.Details + "</td>";
-                        tr = tr + "</tr>";
-                        $('#myTable > tbody:last').append(tr);
-                    });
-                },
-                error: function (data) {
-                    alert("Error retrieving data from database.");
-                }
-            });
 
-            // code for deleteRows and clearRows buttons is the same as before
-        });
+<h2> </h2>
+@*<h2> Events </h2>*@
+<h2> </h2>
+<style>
+    .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /*border: 1px solid red;*/
+    }
+
+    .title {
+        width: 50%;
+        justify-content: center;
+        align-items: center;
+        color: #000000;
+        font-size: 25px;
+        font-weight: normal;
+        text-align: center;
+        margin: 0 20px 0 0;
+        /* border: 1px solid red;*/
+    }
 
 
-    </script>
-    <meta charset=utf-8 />
-</head>
-<body>
-    <center>
-        <h1>Calendar</h1>
+    input[type="text"] {
+        border: none;
+        border-radius: 5px;
+        padding: 8px;
+        width: 200px;
+        border: 1px solid #000000;
+    }
 
-        <table width="600" border="1" id="myTable">
-            <!-- head table -->
-            <thead>
+    button[type="submit"] {
+        padding: 10px;
+        border: none;
+        border-radius: 0 20px 20px 0;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        margin-left: 10px;
+        border: 1px solid #000000;
+    }
+
+    hr.style19 {
+        width: 100%;
+        border-top: 4px solid #1E5F74;
+        color: #1E5F74;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .new-folder-items {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    #create-folder-btn {
+        background-color: #3795BD;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-right: 16px;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    /* Style the modal */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.4); /* Black background with opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%; /* Could be more or less, depending on screen size */
+        height: 30%;
+        border-radius: 5px;
+    }
+
+    /* Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    #submit {
+        background-color: #6495ED;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        align-items: center;
+        display: flex;
+        justify-content: flex-end;
+        float: right;
+        position: relative;
+        font-size: 14px;
+        font-weight: 400;
+        box-sizing: border-box;
+        text-decoration: none;
+        text-align: center;
+        min-width: 80px;
+        height: 32px;
+    }
+
+    .upload-btn {
+        background-color: #dddddd;
+        color: black;
+        padding: 8px 16px;
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-right: 16px;
+    }
+
+    .styled-table {
+        border-collapse: collapse;
+        margin: auto;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        /*width: 80%;*/
+    }
+
+        .styled-table thead tr {
+            background-color: #f2f2f2;
+            color: #000000;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #f2f2f2;
+            }
+</style>
+@*content*@
+<div class="new-folder-items">
+
+    <a href="ViewHoliday" class="upload-btn">Item Holiday</a>
+    <a href="ViewEvents" class="upload-btn">Item Events</a>
+</div>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>EventID</th>
+            <th>EventDate</th>
+            <th>StartTime</th>
+            <th>EndTime</th>
+            <th>Subject</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
                 <tr>
-                    <td width="91"> <div align="center">Day_Holiday </div></td>
-                    <td width="98"> <div align="center">Details </div></td>
-            </thead>
-            <!-- body dynamic rows -->
-            <tbody></tbody>
-        </table>
-        <br />
-        <input type="button" id="deleteRows" value="Delete Last Row">
-        <input type="button" id="clearRows" value="Clear Table">
-        <center>
-</body>
-</html>
+                    <td>@item.EventID</td>
+                    <td>@item.EventDate</td>
+                    <td>@item.StartTime</td>
+                    <td>@item.EndTime</td>
+                    <td>@item.Subject</td>
+                </tr>
+            }
+        }
+
+        <!-- and so on... -->
+    </tbody>
+</table>
+
+<script>
+    const jsonEvents = [];
+    if (jsonEvents != null) {
+        const eventID = [];
+        const eventDate = [];
+        const startTime = [];
+        const endTime = [];
+        const subject = [];
+
+        for (let i = 0; i < jsonEvents.length; i++) {
+            eventID.push(jsonEvents[i].EventID);
+            eventDate.push(jsonEvents[i].EventDate);
+            startTime.push(jsonEvents[i].StartTime);
+            endTime.push(jsonEvents[i].EndTime);
+            subject.push(jsonEvents[i].Subject);
+            //// loop over Subjects array inside each item
+            //for (let j = 0; j < jsonEvents[i].Subjects.length; j++) {
+            //    console.log(jsonEvents[i].Subjects[j]);
+            //}
+        }
+    }
+</script>
+
+
+
 
 
 
