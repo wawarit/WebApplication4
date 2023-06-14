@@ -1,0 +1,373 @@
+﻿
+@{
+    ViewBag.Title = "CreateFoldersKM";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateFoldersKM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.standalone.css" />
+    <style>
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        
+        .title {
+            width: fit-content;
+            color: #000000;
+            font-size: 25px;
+            font-weight: normal;
+            text-align: left;
+            margin: 0 20px 10px;
+            margin-right: 1000px;
+            margin-left: auto;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .new-items {
+            display: flex;
+            align-items: center;
+            margin-right: 90px; 
+            margin-left: auto;
+        }
+        
+        .search-form {
+            display: flex;
+            align-items: center;
+            margin-left: 710px; 
+        }
+        
+        input[type="text"] {
+            border: none;
+            border-radius: 5px;
+            padding: 8px;
+            width: 280px;
+            border: 1px solid #000000;
+        }
+        
+        button[type="submit"] {
+            padding: 10px;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            margin-left: 10px;
+            border: 1px solid #000000;
+        }
+        
+        #create-folder-btn {
+            background-color: #3795BD;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-right: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        
+        hr.style19 {
+            width: 100%;
+            border-top: 4px solid #1E5F74;
+            color: #1E5F74;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 30%;
+            height: 45%;
+            border-radius: 5px;
+        }
+
+        h3 {
+            text-align: left;
+        }
+        .close {
+            color: #aaa;
+            align-self: flex-end; 
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #submit {
+            background-color: #6495ED;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            align-items: center;
+            display: flex;
+            justify-content: flex-end;
+            float: right;
+            position: relative;
+            font-size: 14px;
+            font-weight: 400;
+            box-sizing: border-box;
+            text-decoration: none;
+            text-align: center;
+            min-width: 80px;
+            height: 32px;
+        }
+
+        .folder-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .folder-image {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            background-image: url('https://img.icons8.com/material/48/FAB005/folder-invoices--v1.png');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .folder-name {
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .styled-table {
+            border-collapse: collapse;
+            margin: auto;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 900px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .styled-table thead tr {
+            background-color: #f2f2f2;
+            color: #000000;
+            text-align: left;
+        }
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #f2f2f2;
+        }
+    </style>
+
+</head>
+<body>
+    <!--content-->
+    <div class="content">
+        <h1 class="title">Knowledge Management</h1>
+        <div class="new-items">
+            <button id="create-folder-btn">สร้างโฟลเดอร์</button>
+            <div id="folder-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h1 style="text-align: left; font-size: 20px;">สร้างโฟลเดอร์</h1>
+                    <form id="folder-form">
+                        <label for="folder-name">ชื่อโฟลเดอร์:</label>
+                        <input type="text" id="folder-name" name="folder-name">
+                        <br /> <br />
+                        <label for="text-description">คำอธิบาย:</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="text" id="text-description" name="text-description">
+                        <br /><br />
+                        <button id="submit">ยืนยัน</button>
+                    </form>
+                </div>
+            </div>
+            <form class="search-form">
+                <input type="text" placeholder="Search..." name="search">
+                <button type="submit">Go</button>
+            </form>
+        </div>
+    </div>
+    <hr class="style19"><!--end content-->
+    <br />
+
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>ลำดับ</th>
+                <th>ประเภทเอกสาร</th>
+                <th>คำอธิบายประเภทเอกสาร</th>
+                <th>จัดการประเภทเอกสาร</th>
+                @*<th>ทดสอบ</th>*@
+            </tr>
+        </thead>
+        <tbody id="folders-table-body">
+            @*เพิ่มลำดับ*@
+            @{
+                int counter = 1;
+            }
+            @foreach (var folder in Model)
+            {
+                <tr>
+                    <td>
+                        @counter
+                        @{
+                            counter++;
+                        }
+                    </td>
+                    <td>
+                        <div class="folder-details">
+                            <img class="folder-image">&nbsp; &nbsp;
+                            @*<div class="folder-name">@folder.folder_name</div>*@
+                            <a href="@Url.Action("KM", "Knowledge", new { id = folder.folder_id })">@folder.folder_name</a>
+                        </div>
+                    </td>
+                    <td> @folder.description </td>
+                    <td>
+                        <input type="button" value="ลบ" class="btn btn-danger delete-btn" data-id="@folder.folder_id" />
+                    </td>                   
+                    @*<td>
+                        @folder.folder_id
+                    </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    @using (Html.BeginForm("DeleteFolder", "Knowledge", FormMethod.Post, new { id = "deleteForm" }))
+    {
+        <input type="hidden" name="id" id="deleteId" />
+    }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".delete-btn").click(function () {
+                if (confirm('คุณต้องการลบประเภทเอสารหรือไม่เอกสารหรือไม่')) {
+                    var id = $(this).data("id");
+                    var row = $(this).closest("tr");
+
+                    $.ajax({
+                        url: "/Knowledge/DeleteFolder",
+                        type: "POST",
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                // Remove the row from the UI
+                                row.remove();
+                                console.log("Data deleted successfully.");
+
+                                // Reload the page
+                                location.reload();
+                            } else {
+                                console.log("Error deleting data.");
+                            }
+                        },
+                        error: function () {
+                            console.log("Error deleting data.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var modal = document.getElementById("folder-modal");
+        var btn = document.getElementById("create-folder-btn");
+        var closeBtn = document.getElementsByClassName("close")[0];
+        btn.onclick = function () {
+            modal.style.display = "block";
+        };
+        closeBtn.onclick = function () {
+            modal.style.display = "none";
+        };
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Function to update the folder section of the webpage
+        function updateFolderSection() {
+            var folderSection = document.getElementById("folder-section");
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/Knowledge/CreateFoldersKM", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    folderSection.innerHTML = xhr.responseText;
+                    document.getElementById("folder-name").value = "";
+                }
+            };
+            xhr.send();
+        }
+
+        // Handle form submission
+        var form = document.getElementById("folder-form");
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            var folderName = document.getElementById("folder-name").value;
+            var description = document.getElementById("text-description").value;
+            if (folderName != null && folderName != "") {
+                // Send data to the server using fetch
+                fetch("/Knowledge/SaveFolderToDatabase", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: "folderName=" + encodeURIComponent(folderName) + "&description=" + encodeURIComponent(description),
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            console.log("Folder saved successfully!");
+                            // Refresh the page or perform any other action you want
+                            location.reload();
+                        } else {
+                            console.error("Error saving folder:", response.statusText);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error("Error saving folder:", error);
+                    });
+            }
+        });
+
+
+
+    </script>
+
+</body>
+</html>

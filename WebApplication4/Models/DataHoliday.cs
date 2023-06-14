@@ -15,7 +15,12 @@ namespace WebApplication4.Models
         [DisplayFormat(DataFormatString = "{0:d}")]
 
         public DateTime Holiday { get; set; }
+        public String Day_Holiday { get; set; }
         public string Details { get; set; }
+
+        public string Sheetname { get; set; }
+
+        //public string Rows { get; set; }
         //public string codeEventsday { get; set; }
         //public string Eventsday { get; set; }
         //public string StartTime { get; set; }

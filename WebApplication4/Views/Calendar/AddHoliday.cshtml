@@ -10,48 +10,55 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>DataHoliday</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    
+    <div class="form-horizontal">
+        <h4>DataHoliday</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Holiday, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class='input-group date' id='dtReleaseDate'>
-            @Html.TextBoxFor(model => model.Holiday, new { @type = "date", @class = "form-control datepicker" })
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Holiday, "วันหยุดประจำปี"))
+            <div class='input-group date' id='dtReleaseDate'>
+                @Html.TextBoxFor(model => model.Holiday, new { @type = "date", @class = "form-control datepicker", placeholder = "กรอกวันหยุดประจำปี" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Details, "รายละเอียด")
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Details, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกรายละเอียดวันหยุดประจำปี" } })
+                @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Details, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Details, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
-        </div>
-    </div>
-</div>
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-<script type="text/javascript">
-        $(function () {
-            $('#dtReleaseDate').datepicker({
-                defaultDate: new Date(),
-                dateFormat: "yyyy-MM-dd"
-            });
-        });
-</script>
+@*<script>
+    // Get the current date
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+    var day = ("0" + currentDate.getDate()).slice(-2);
+    // Format the current date as "yyyy-MM-dd" for setting the default value
+    var formattedDate = year + "-" + month + "-" + day;
+    // Set the default value of the datepicker to the formatted current date
+    document.getElementById("Holiday").value = formattedDate;
+    // Allow selecting a different date
+    document.getElementById("Holiday").addEventListener("input", function () {
+        this.setAttribute("type", "date");
+    });
+</script>*@

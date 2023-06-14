@@ -1,39 +1,106 @@
 ﻿
 @{
     ViewBag.Title = "Index";
-    Layout = null;
+    //Layout = null;
 }
-
 <style media="screen">
     .container {
         border: 0px solid darkgrey;
         border-radius: 3px;
         padding: 5px;
-        width: 99%;
         margin: 0 auto;
     }
 
-    .hightligh a {
-        background: #FF0000 !important;
-        color: #FFFF00 !important;
+    .left-section img {
+        max-width: 70%;
+        max-height: 100%;
+        object-fit: contain;
     }
 
-    .highlight-event a {
-        background: #32cd32 !important;
+    .hightligh a {
+        background: #ED2939 !important;
         color: #000000 !important;
     }
 
+    .highlight-event a {
+        background: #33CC99 !important;
+        color: #000000 !important;
+    }
 
     .ui-datepicker {
-        background: #B0C4DE;
-        border: 1px solid #555;
+        background-color: #B0C4DE !important;
+        border: 1px solid #F5F5DC;
         color: #000000;
+        right: 0;
+        left: auto;
+        transform: translateX(298%);
+        margin-top: -30px;
     }
+
+    .upload-btn-container {
+        position: absolute;
+        top: 410px;
+        right: 4px;
+    }
+
+    .container #year {
+        position: absolute;
+        right: 245px;
+        z-index: 1;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center; /* Center align the buttons */
+        align-items: center;
+        margin-top: 3px;
+    }
+
+        .button-container a {
+            margin: 0 10px; /* Add some space between the buttons */
+        }
+
 </style>
 
+
+
+<script>
+    $(document).ready(function () {
+        var queryDate = null;
+
+        $(function () {
+            $("#year").change(function () {
+                $('#datepicker').datepicker("destroy");
+                var conceptName = $('#year').find(":selected").text();
+                higHlightDays(conceptName);
+            });
+        });
+
+        higHlightDays();
+
+        function higHlightDays(year) {
+            if (year == null) {
+                queryDate = null;
+            } else {
+                queryDate = '1/1/' + year;
+            }
+
+            // Rest of your code...
+
+        }
+
+        function setHoliday(date, jsonHoliday, jsonEvents) {
+            // Rest of your code...
+        }
+    });
+</script>
+
+
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
 
 <script>
     $(document).ready(function () {
@@ -41,7 +108,6 @@
         var queryDate = null;
 
         /*queryDate = '1/1/' + currentYear;*/
-
 
         $(function () {
             $("#year").change(function () {
@@ -51,16 +117,6 @@
             });
 
         });
-        //$(function () {
-        //    $("#day").datepicker({
-        //        onSelect: function (date, datepicker) {
-        //            if (date != "") {
-        //                alert("Selected Date: " + date);
-        //            }
-        //        }
-        //    });
-        //});
-
         higHlightDays();
         function higHlightDays(year)
         {
@@ -99,7 +155,6 @@
                             }
                             ,defaultDate: queryDate
                         });
-
 
                     }
                 },
@@ -158,161 +213,70 @@
 
             return [true, ''];
         }
-
     });
+
 
 </script>
 
+<br/>
 <div class='container'>
+    <div class="right-section">
+        <select id="year">
+            @for (int year = DateTime.Now.Year; year >= 2021; year--)
+            {
+                <option value="@year">@year</option>
+            }
+        </select>
+        <div id="datepicker"></div>
 
-    <select id="year">
-        @for (int year = DateTime.Now.Year; year >= 2021; year--)
-        {
-            <option value="@year">@year</option>
+        <div class="left-section">
+            <img src="https://drive.google.com/uc?export=view&id=1mSKa0ILsaL-JvdtODL9C6v9uF7g9vO5E" alt="Press Release Image">
+        </div>
 
-        }
-    </select>
+        <div class="upload-btn-container">
+            <a href="ViewallHoliday" class="upload-btn">ดูข้อมูลวันหยุดประจำปีทั้งหมด</a>
+        </div>
 
+        <br>
+        <div class="button-container">
+            <div>
+                <a id="annual-holiday-btn" href="ViewHoliday" class="upload-btn">วันหยุดประจำปี</a>
+            </div>
+            <div>
+                <a id="weekly-activities-btn" href="ViewEvents" class="upload-btn">กิจกรรมประจำสัปดาห์</a>
+            </div>
+        </div>
 
-    <div id="datepicker"></div>
-
-
+        
+    </div>
 </div>
 
 
-<h2> </h2>
+
+<br />
 @*<h2> Events </h2>*@
-<h2> </h2>
+<h2 style="color: #0A4D68; font-size: 24px; text-align: center;">
+    <i class="fas fa-bullhorn" style="margin-right: 10px;"></i> กิจกรรมประจำสัปดาห์
+</h2>
+
 <style>
-    .content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        /*border: 1px solid red;*/
-    }
-
-    .title {
-        width: 50%;
-        justify-content: center;
-        align-items: center;
-        color: #000000;
-        font-size: 25px;
-        font-weight: normal;
-        text-align: center;
-        margin: 0 20px 0 0;
-        /* border: 1px solid red;*/
-    }
-
-
-    input[type="text"] {
-        border: none;
-        border-radius: 5px;
-        padding: 8px;
-        width: 200px;
-        border: 1px solid #000000;
-    }
-
-    button[type="submit"] {
-        padding: 10px;
-        border: none;
-        border-radius: 0 20px 20px 0;
-        background-color: #007bff;
-        color: #fff;
-        cursor: pointer;
-        margin-left: 10px;
-        border: 1px solid #000000;
-    }
-
-    hr.style19 {
-        width: 100%;
-        border-top: 4px solid #1E5F74;
-        color: #1E5F74;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .new-folder-items {
-        max-width: 1000px;
+    #new-folder-items {
         margin: 0 auto;
-    }
-
-    #create-folder-btn {
-        background-color: #3795BD;
-        border: none;
-        color: white;
-        padding: 8px 16px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin-right: 16px;
-        cursor: pointer;
-        border-radius: 10px;
-    }
-
-    /* Style the modal */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgba(0,0,0,0.4); /* Black background with opacity */
-    }
-
-    /* Modal Content/Box */
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto; /* 15% from the top and centered */
-        padding: 20px;
-        border: 1px solid #888;
-        width: 30%; /* Could be more or less, depending on screen size */
-        height: 30%;
-        border-radius: 5px;
-    }
-
-    /* Close Button */
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-    #submit {
-        background-color: #6495ED;
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
+        border: 1px solid red;
+        display: none;
+        position: fixed;
+        justify-content: center;
         align-items: center;
-        display: flex;
-        justify-content: flex-end;
-        float: right;
-        position: relative;
-        font-size: 14px;
-        font-weight: 400;
-        box-sizing: border-box;
-        text-decoration: none;
+        margin-right: 30px;
+    }
+
+    .button-container {
         text-align: center;
-        min-width: 80px;
-        height: 32px;
+        margin-top: auto;
     }
 
     .upload-btn {
-        background-color: #dddddd;
+        background-color: #46C2CB;
         color: black;
         padding: 8px 16px;
         border: none;
@@ -322,7 +286,6 @@
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
-        margin-right: 16px;
     }
 
     .styled-table {
@@ -332,7 +295,6 @@
         font-family: sans-serif;
         min-width: 400px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-        /*width: 80%;*/
     }
 
         .styled-table thead tr {
@@ -354,39 +316,59 @@
                 border-bottom: 2px solid #f2f2f2;
             }
 </style>
-@*content*@
-<div class="new-folder-items">
 
-    <a href="ViewHoliday" class="upload-btn">Item Holiday</a>
-    <a href="ViewEvents" class="upload-btn">Item Events</a>
-</div>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+@*<div id="button-container" class="button-container">
+        <a id="annual-holiday-btn" href="ViewallHoliday" class="upload-btn">ดูข้อมูลวันหยุดประจำปีทั้งหมด</a>
+        <br>
+        <a id="weekly-activities-btn" href="ViewEvents" class="upload-btn">กิจกรรมประจำสัปดาห์</a>
+    </div>*@
+
+<br>
 <table class="styled-table">
     <thead>
         <tr>
-            <th>EventID</th>
-            <th>EventDate</th>
-            <th>StartTime</th>
-            <th>EndTime</th>
-            <th>Subject</th>
+            <th>ลำดับ</th>
+            <th>วันที่</th>
+            <th>เวลาเริ่มต้น</th>
+            <th>เวลาสิ้นสุด</th>
+            <th>หัวเรื่อง</th>
+            <th>แผนกงาน</th>
         </tr>
     </thead>
     <tbody>
-        @if (Model != null)
-        {
-            foreach (var item in Model)
+        @{
+            int counter = 1;
+            if (Model != null)
             {
-                <tr>
-                    <td>@item.EventID</td>
-                    <td>@item.EventDate</td>
-                    <td>@item.StartTime</td>
-                    <td>@item.EndTime</td>
-                    <td>@item.Subject</td>
-                </tr>
+                DateTime today = DateTime.Today;
+                int currentDayOfWeek = (int)today.DayOfWeek;
+                DateTime startOfWeek = today.AddDays(-(currentDayOfWeek - 1));
+                DateTime endOfWeek = today.AddDays(7 - currentDayOfWeek);
+
+                foreach (var item in Model)
+                {
+                    DateTime eventDate = DateTime.Parse(item.Event_Date);
+                    if (eventDate >= startOfWeek && eventDate <= endOfWeek)
+                    {
+                        <tr>
+                            <td>@counter</td>
+                            @{
+                                counter++;
+                            }
+                            <td>@item.Event_Date</td>
+                            <td>@item.Start_Time</td>
+                            <td>@item.End_Time</td>
+                            <td>@item.Subject</td>
+                            <td>@item.Department</td>
+                        </tr>
+                    }
+                }
             }
         }
-
-        <!-- and so on... -->
     </tbody>
 </table>
 
@@ -405,23 +387,14 @@
             startTime.push(jsonEvents[i].StartTime);
             endTime.push(jsonEvents[i].EndTime);
             subject.push(jsonEvents[i].Subject);
-            //// loop over Subjects array inside each item
-            //for (let j = 0; j < jsonEvents[i].Subjects.length; j++) {
-            //    console.log(jsonEvents[i].Subjects[j]);
-            //}
         }
     }
+    //$(document).ready(function () {
+    //    var isAdmin = false;  // Replace with your actual logic to determine if the user is an admin
+
+    //    if (!isAdmin) {
+    //        $("#button-container").hide();
+    //    }
+    //});
+
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Runtime.Remoting.Contexts;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -15,20 +16,36 @@ namespace WebApplication3.Controllers
     {
         private readonly string sqlConn = ConfigurationManager.ConnectionStrings["Project"].ToString();
 
-        private object db;
+        //private object db;
 
         [HttpGet]
         // GET: Calendar
         public ActionResult Index(EventCalendarModel model)
         {
-            return View();
-        }
-        public ActionResult Index(DataEvents model)
-        {
-            return View();
+            System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
+
+            var result = new List<DataEvents>();
+            DataTable dataTableaEvents = new DataTable();
+            var getDataEvents = "SELECT * FROM [Dtb_Events] ";
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (var cmd = new SqlCommand(getDataEvents, con))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result.Add(TodDataEventsListModel(reader));
+
+                    }
+                    con.Close();
+                }
+            }
+            return View(result);
         }
 
-        public ActionResult Test()
+
+        public ActionResult Index(DataEvents model)
         {
             return View();
         }
@@ -74,9 +91,48 @@ namespace WebApplication3.Controllers
         {
             return View();
         }
+        public ActionResult UpdateEventsdate()
+        {
+            return View();
+        }
+        public ActionResult EditEvents()
+        {
+            return View();
+        }
+        public ActionResult AddEventstest()
+        {
+            return View();
+        }
+
 
         
-        public ActionResult ViewHoliday(DataEvents model)
+
+        [HttpGet]
+        // GET: Calendar
+        public ActionResult ViewallHoliday(EventCalendarModel model)
+        {
+            System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
+            var result = new List<DataHoliday>();
+            DataTable dataTableaEvents = new DataTable();
+            var getDataHoliday = "SELECT * FROM [Dtb_Holiday] ";
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                con.Open();
+                using (var cmd = new SqlCommand(getDataHoliday, con))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result.Add(TodDataHolidayListModel(reader));
+                    }
+                    con.Close();
+                }
+            }
+            return View(result);
+        }
+
+        
+        public ActionResult ViewHoliday(DataHoliday model)
         {
             System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
             var result = new List<DataHoliday>();
@@ -104,6 +160,9 @@ namespace WebApplication3.Controllers
             DataHoliday model = new DataHoliday();
             model.ID = Convert.ToInt16(dataReader["ID"] .ToString() );
             model.Holiday = Convert.ToDateTime(dataReader["Day_Holiday"] == DBNull.Value ? null : dataReader["Day_Holiday"].ToString());
+            string formattedDate = model.Holiday.ToString("dd/MM/yyyy");
+            model.Day_Holiday = formattedDate;
+
             model.Details = dataReader["Details"] == DBNull.Value ? null : dataReader["Details"].ToString();
             return model;
         }
@@ -133,16 +192,27 @@ namespace WebApplication3.Controllers
 
         public DataEvents TodDataEventsListModel(SqlDataReader dataReader)
         {
+            System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
             DataEvents model = new DataEvents();
-            model.EventID = Convert.ToInt16(dataReader["EventID"] == DBNull.Value ? null : dataReader["EventID"].ToString());
+            model.EventID = Convert.ToInt32(dataReader["EventID"] == DBNull.Value ? null : dataReader["EventID"].ToString());
             model.EventDate = Convert.ToDateTime(dataReader["EventDate"] == DBNull.Value ? null : dataReader["EventDate"].ToString());
+            string formattedDate = model.EventDate.ToString("dd/MM/yyyy");
+            model.Event_Date = formattedDate;
+
             model.StartTime = Convert.ToDateTime(dataReader["StartTime"] == DBNull.Value ? null : dataReader["StartTime"].ToString());
+            string formattedTime = model.StartTime.ToString("HH:mm:ss");
+            model.Start_Time = formattedTime;
+
             model.EndTime = Convert.ToDateTime(dataReader["EndTime"] == DBNull.Value ? null : dataReader["EndTime"].ToString());
+            string formattedtoTimes = model.EndTime.ToString("HH:mm:ss");
+            model.End_Time = formattedtoTimes;
+
             model.Subject = dataReader["Subject"] == DBNull.Value ? null : dataReader["Subject"].ToString();
             model.Detail = dataReader["Detail"] == DBNull.Value ? null : dataReader["Detail"].ToString();
             model.Creator = dataReader["Creator"] == DBNull.Value ? null : dataReader["Creator"].ToString();
             model.Status = Convert.ToBoolean(dataReader["Status"] == DBNull.Value ? null : dataReader["Status"].ToString());
             model.CreateDatetime = Convert.ToDateTime(dataReader["CreateDatetime"] == DBNull.Value ? null : dataReader["CreateDatetime"].ToString());
+            model.Department = dataReader["Department"] == DBNull.Value ? null : dataReader["Department"].ToString();
             return model;
         }
 
@@ -265,14 +335,14 @@ namespace WebApplication3.Controllers
             System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
             try
             {
-                var sql = @"insert into Dtb_Holiday values (@Day_Holiday, @Details)";
+                var sql = @"insert into Dtb_Holiday  values (@Holiday, @Details)";
 
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
                     con.Open();
                     using (var cmd = new SqlCommand(sql, con))
                     {
-                        cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
+                        cmd.Parameters.AddWithValue("@Holiday", model.Holiday);
                         cmd.Parameters.AddWithValue("@Details", model.Details);
                         cmd.ExecuteNonQuery();
                         con.Close();
@@ -312,238 +382,133 @@ namespace WebApplication3.Controllers
             //return View();
         }
 
-        [HttpGet] // Set the attribute to Read
-        public ActionResult ReadHoliday(DataHoliday model)
-
+        //เพิ่มวันนี้ 19/95/66
+        [HttpGet]
+        public ActionResult EditHoliday(int ID)
         {
-            try
+            DataHoliday model = new DataHoliday();
+            using (SqlConnection con = new SqlConnection(sqlConn))
             {
-                var sql = @"select * from Dtb_Holiday";
-
-                using (SqlConnection con = new SqlConnection(sqlConn))
+                string query = "SELECT * FROM Dtb_Holiday WHERE ID = @id";
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
+                    cmd.Parameters.AddWithValue("@ID", ID);
+
                     con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
 
-
-                    using (var cmd = new SqlCommand(sql, con))
+                    if (reader.Read())
                     {
-                        cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-                        cmd.Parameters.AddWithValue("@Details", model.Details);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
+                        model.ID = Convert.ToInt16(reader["ID"].ToString());
+                        model.Holiday = Convert.ToDateTime(reader["Day_Holiday"] == DBNull.Value ? null : reader["Day_Holiday"].ToString());
+                        model.Details = reader["Details"] == DBNull.Value ? null : reader["Details"].ToString();
+                        
                     }
 
+                    reader.Close();
                 }
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = null
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-
             }
-            catch (Exception ex)
-            {
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = ex.Message.ToString()
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-            }
-
+            return View(model);
         }
 
-        [HttpPost] //update //อันนี้1 //เปลี่ยนจาก put เป็น post
-        public ActionResult UpdateHoliday(DataHoliday model)
+        [HttpPost]
+        public ActionResult EditHoliday(DataHoliday model)
         {
-            try
+
+            using (SqlConnection con = new SqlConnection(sqlConn))
             {
                 var sql = @"UPDATE [dbo].[Dtb_Holiday]
-                        SET [Day_Holiday] = @dayHoliday
+                        SET [Day_Holiday] = @day_Holiday
                         ,[Details] = @details
                         WHERE ID = @id";
 
-                using (SqlConnection con = new SqlConnection(sqlConn))
+                using (SqlCommand cmd = new SqlCommand(sql))
                 {
+                    cmd.Connection = con;
+
+                    //cmd.Parameters.AddWithValue("@CreateDatetime", model.CreateDatetime);
                     con.Open();
-
-                    using (var cmd = new SqlCommand(sql, con))
-                    {
-                        cmd.Parameters.AddWithValue("@Day_Holiday", model.Holiday);
-                        cmd.Parameters.AddWithValue("@Details", model.Details);
-                        cmd.Parameters.AddWithValue("@ID", model.ID);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                    }
-
-                }
-                //using (var context = new demoCalendarEntities())
-                //{
-                //    var data = model.Details.where(" @Details = @Details ",).Details();
-                //    return View(data);
-                //}
-
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = null
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-            }
-            catch (Exception ex)
-            {
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = ex.Message.ToString()
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-            }
-            //return View();
-            
-        }
-        
-
-        [HttpPut]
-        //จังหวะกดแก้ไขในหน้า view data ส่งวันไปแก้ไข เพราะ table นี้ไม่มี ID
-        public ActionResult Update(DateTime Day_Holiday)
-        {
-            //แก้ไข
-           
-            var ViewHoliday = "select * from Dtb_Holiday where Day_Holiday = @dayHoliday";
-            
-            using (SqlConnection con = new SqlConnection(sqlConn))
-            {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(ViewHoliday, con))
-                {
-                    var reader = cmd.ExecuteReader();
+                    cmd.ExecuteNonQuery();
                     con.Close();
                 }
+                return RedirectToAction("ViewHoliday");
             }
-            return View(ViewHoliday);
         }
 
-        [HttpPut]
-        //ลบไม่มีเพราะไม่มี id 
-        public ActionResult UpdateandDelete(DateTime Day_Holiday)
+        [HttpPost]
+        public ActionResult DeleteHoliday(int ID)
         {
-            //แก้ไข
+            var deleteSql = @"Delete FROM Dtb_Holiday WHERE ID = @id";
 
-            var ViewHoliday = "UPDATE[dbo].[Dtb_Holiday] SET Day_Holiday = '@Day_Holiday' , Details = '@Details' WHERE Day_Holiday = @dayHoliday";
-            using (SqlConnection con = new SqlConnection(sqlConn))
+            using (SqlConnection connection = new SqlConnection(sqlConn))
             {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(ViewHoliday, con))
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(deleteSql, connection))
                 {
-                    var reader = cmd.ExecuteReader();
-                    con.Close();
-                }
-            }
-            return View(ViewHoliday);
-        }
+                    command.Parameters.AddWithValue("@id", ID);
 
-        //delete update ตรงหน้า view เชื่อมกับ public 2 อันบน
-        public ActionResult Delete(DateTime Day_Holiday)
-        {
-            //แก้ไข
-
-            var ViewHoliday = "UPDATE [dbo].[Dtb_Holiday] SET Status = '0' WHERE Day_Holiday = @dayHoliday";
-            using (SqlConnection con = new SqlConnection(sqlConn))
-            {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(ViewHoliday, con))
-                {
-                    var reader = cmd.ExecuteReader();
-                    con.Close();
+                    command.ExecuteNonQuery();
                 }
+                connection.Close();
             }
-            return View(ViewHoliday);
+
+            return RedirectToAction("ViewHoliday");
         }
 
 
-        [HttpPost] //อันนี้2
-        public ActionResult DeleteHoliday(DataHoliday model)
-        {
+        //[HttpPost] //อันนี้2
+        //public ActionResult DeleteHoliday(DataHoliday model)
+        //{
 
-            try
-            {
-                // model.ID = 8;
-                var sql = @"Delete from Dtb_Holiday where ID = @id";
+        //    try
+        //    {
+        //        // model.ID = 8;
+        //        var sql = @"Delete  FROM Dtb_Holiday WHERE ID = @id";
 
-                using (SqlConnection con = new SqlConnection(sqlConn))
-                {
-                    con.Open();
+        //        using (SqlConnection con = new SqlConnection(sqlConn))
+        //        {
+        //            con.Open();
 
 
-                    using (var cmd = new SqlCommand(sql, con))
-                    {
-                        cmd.Parameters.AddWithValue("@ID", model.ID);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                    }
-                }
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = null
-                };
+        //            using (var cmd = new SqlCommand(sql, con))
+        //            {
+        //                cmd.Parameters.AddWithValue("@ID", model.ID);
+        //                cmd.ExecuteNonQuery();
+        //                con.Close();
+        //            }
+        //        }
+        //        var status = new ResultModel
+        //        {
+        //            Status = new HttpStatusCodeResult(200),
+        //            Success = true,
+        //            Message = null
+        //        };
 
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-            }
-            catch (Exception ex)
-            {
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = ex.Message.ToString()
-                };
+        //        return Json(new[] { new
+        //        {
+        //            Status  = status,
+        //            Details = string.Empty
+        //        }
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var status = new ResultModel
+        //        {
+        //            Status = new HttpStatusCodeResult(200),
+        //            Success = true,
+        //            Message = ex.Message.ToString()
+        //        };
 
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-            }
-            
-        }
+        //        return Json(new[] { new
+        //        {
+        //            Status  = status,
+        //            Details = string.Empty
+        //        }
+        //        });
+        //    }
+
+        //}
 
         [HttpPost]
         public ActionResult AddEvents(DataEvents model)
@@ -551,7 +516,9 @@ namespace WebApplication3.Controllers
             System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
             try
             {
-                var sql = @"insert into Dtb_Events values (@EventID, @EventDate, @StartTime, @EndTime, @Subject, @Detail, @Creator, @Status ,@CreateDatetime)";
+                //DateTime sqlMinDateAsNetDateTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+
+                var sql = @"insert into Dtb_Events (EventDate, StartTime, EndTime, Subject, Detail, Creator, Status ,CreateDatetime, Department) values (@EventDate, @StartTime, @EndTime, @Subject, @Detail, @Creator, 1 ,getdate(), @Department)";
 
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
@@ -564,9 +531,9 @@ namespace WebApplication3.Controllers
                         cmd.Parameters.AddWithValue("@EndTime", model.EndTime);
                         cmd.Parameters.AddWithValue("@Subject", model.Subject);
                         cmd.Parameters.AddWithValue("@Detail", model.Detail);
-                        cmd.Parameters.AddWithValue("@Creator", model.Creator);
+                        cmd.Parameters.AddWithValue("@Creator", 6230200635);
                         cmd.Parameters.AddWithValue("@Status", model.Status);
-                        cmd.Parameters.AddWithValue("@CreateDatetime", model.CreateDatetime);
+                        cmd.Parameters.AddWithValue("@Department", model.Department);
                         cmd.ExecuteNonQuery();
                         con.Close();
                     }
@@ -605,61 +572,76 @@ namespace WebApplication3.Controllers
             //return View();
         }
 
-        [HttpPost]
-        public ActionResult UpdateEvents(DataEvents model)
+        [HttpGet]
+        public ActionResult EditEvents(int EventID)
         {
-            System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
-            try
+            DataEvents model = new DataEvents();
+            using (SqlConnection con = new SqlConnection(sqlConn))
+            {
+                string query = "SELECT * FROM Dtb_Events WHERE EventID = @eventID";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@EventID", EventID);
+                    
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        model.EventID = Convert.ToInt32(reader["EventID"] == DBNull.Value ? null : reader["EventID"].ToString());
+                        model.EventDate = Convert.ToDateTime(reader["EventDate"] == DBNull.Value ? null : reader["EventDate"].ToString());
+                        model.StartTime = Convert.ToDateTime(reader["StartTime"] == DBNull.Value ? null : reader["StartTime"].ToString());
+                        model.EndTime = Convert.ToDateTime(reader["EndTime"] == DBNull.Value ? null : reader["EndTime"].ToString());
+                        //model.Start_Time = reader["Start_Time"] == DBNull.Value ? null : reader["Start_Time"].ToString();
+                        //model.End_Time = reader["End_Time"] == DBNull.Value ? null : reader["End_Time"].ToString();
+                        model.Subject = reader["Subject"] == DBNull.Value ? null : reader["Subject"].ToString();
+                        model.Detail = reader["Detail"] == DBNull.Value ? null : reader["Detail"].ToString();
+                        model.Creator = reader["Creator"] == DBNull.Value ? null : reader["Creator"].ToString();
+                        model.Status = Convert.ToBoolean(reader["Status"] == DBNull.Value ? null : reader["Status"].ToString());
+                        //model.CreateDatetime = Convert.ToDateTime(reader["CreateDatetime"] == DBNull.Value ? null : reader["CreateDatetime"].ToString());
+                        model.Department = reader["Department"] == DBNull.Value ? null : reader["Department"].ToString();
+                    }
+
+                    reader.Close();
+                }
+
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditEvents(DataEvents model)
+        {
+            using (SqlConnection con = new SqlConnection(sqlConn))
             {
                 var sql = @"UPDATE [dbo].[Dtb_Events]
-                        SET [StartTime] = @startTime
-                        ,[EndTime] = @endtime
+                        SET [EventDate] = @eventDate
+                        ,[StartTime] = @startTime
+                        ,[EndTime] = @endTime
+                        ,[Subject] = @subject
+                        ,[Detail] = @detail
+                        ,[Department] = @department
                         WHERE EventID = @eventID";
 
-                using (SqlConnection con = new SqlConnection(sqlConn))
+                using (SqlCommand cmd = new SqlCommand(sql))
                 {
+                    cmd.Connection = con;
+                    cmd.Parameters.AddWithValue("@EventID", 1);
+                    cmd.Parameters.AddWithValue("@EventDate", model.Event_Date);
+                    cmd.Parameters.AddWithValue("@StartTime", model.Start_Time);
+                    cmd.Parameters.AddWithValue("@EndTime", model.End_Time);
+                    cmd.Parameters.AddWithValue("@Subject", model.Subject);
+                    cmd.Parameters.AddWithValue("@Detail", model.Detail);
+                    cmd.Parameters.AddWithValue("@Creator", model.Creator);
+                    cmd.Parameters.AddWithValue("@Status", model.Status);
+                    cmd.Parameters.AddWithValue("@Department", model.Department);
+                    //cmd.Parameters.AddWithValue("@CreateDatetime", model.CreateDatetime);
                     con.Open();
-
-
-                    using (var cmd = new SqlCommand(sql, con))
-                    {
-                        cmd.Parameters.AddWithValue("@StartTime", model.StartTime);
-                        cmd.Parameters.AddWithValue("@EndTime", model.EndTime);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                    }
+                    cmd.ExecuteNonQuery();
+                    con.Close();
                 }
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = null
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
+                return RedirectToAction("ViewEvents");
             }
-            catch (Exception ex)
-            {
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = ex.Message.ToString()
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-            }
-            //return View();
         }
 
         [HttpDelete]
@@ -667,8 +649,7 @@ namespace WebApplication3.Controllers
         {
             try
             {
-                var sql = @"delete from Dtb_Events where @EventID = @eventID";
-
+                var sql = @"Update  Dtb_Events set status=0  where EventID = @EventID";
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
                     con.Open();
@@ -714,148 +695,6 @@ namespace WebApplication3.Controllers
             //return View();
         }
 
-        //เพิ่มใหม่ อยู่ index
-        //[HttpGet]
-        //public JsonResult GetData()
-        //{
-        //    System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
-        //    using (SqlConnection con = new SqlConnection(sqlConn))
-        //    {
-        //        con.Open();
-        //        using (SqlCommand cmd = new SqlCommand("SELECT * FROM Dtb_Events", con))
-        //        {
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            List<object> data = new List<object>();
-        //            while (reader.Read())
-        //            {
-        //                data.Add(new
-        //                {
-        //                    EventID = reader["EventID"],
-        //                    EventDate = reader["EventDate"],
-        //                    StartTime = reader["StartTime"],
-        //                    EndTime = reader["EndTime"],
-        //                    Subject = reader["Subject"]
-                            
-        //                });
-        //            }
-        //            return Json(data, JsonRequestBehavior.AllowGet);
-        //        }
-        //    }
-        //}
-
-
-        //เพิ่มข้อมูลที่อยู่ใน viewcalendar จะทำให้เชื่อมกับปฎิทินอันเล็ก
-        //[HttpGet]
-        //public JsonResult GetData()
-        //{
-        //    // retrieve data from SQL database
-        //    using (SqlConnection conn = new SqlConnection("<connection string>"))
-        //    {
-        //        conn.Open();
-        //        SqlCommand cmd = new SqlCommand("SELECT * FROM Dtb_Events", conn);
-        //        SqlDataReader rdr = cmd.ExecuteReader();
-
-        //        // create a list of objects to store the data
-        //        List<object> data = new List<object>();
-
-        //        // iterate over the result set and add each row to the list
-        //        while (rdr.Read())
-        //        {
-        //            data.Add(new
-        //            {
-        //                EventID = rdr["EventID"],
-        //                EventDate = rdr["EventDate"],
-        //                StartTime = rdr["StartTime"],
-        //                EndTime = rdr["EndTime"],
-        //                Subject = rdr["Subject"],
-
-        //            });
-        //        }
-
-        //        // return the list of objects as a JSON object
-        //        return Json(data, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
-        //[HttpGet]
-        //public ActionResult GetData(EventCalendarModel model)
-        //{
-
-        //    try
-        //    {
-        //        DataTable dataTableEvents = new DataTable();
-
-        //        var getDataEvent = "SELECT * FROM [Dtb_Events] where year(EventDate) = @year and Status = 1 ";
-        //        using (SqlConnection con = new SqlConnection(sqlConn))
-        //        {
-        //            con.Open();
-        //            using (var cmd = new SqlCommand(getDataEvent, con))
-        //            {
-        //                //cmd.Parameters.AddWithValue("@year", year);
-        //                var reader = cmd.ExecuteReader();
-        //                dataTableEvents.Load(reader);
-        //                con.Close();
-
-        //                SqlDataReader rdr = cmd.ExecuteReader();
-
-        //                //        // create a list of objects to store the data
-        //                List<object> data = new List<object>();
-
-        //                while (rdr.Read())
-        //                {
-        //                    data.Add(new
-        //                    {
-        //                        EventID = rdr["EventID"],
-        //                        EventDate = rdr["EventDate"],
-        //                        StartTime = rdr["StartTime"],
-        //                        EndTime = rdr["EndTime"],
-        //                        Subject = rdr["Subject"],
-
-        //                    });
-        //                }
-
-        //                // return the list of objects as a JSON object
-        //                return Json(data, JsonRequestBehavior.AllowGet);
-        //            }
-        //        }
-
-        //        var result = new DataHoliday();
-
-        //        result.dataTableEvents = DataTableToJSON(dataTableEvents);
-
-        //        var status = new ResultModel
-        //        {
-        //            Status = new HttpStatusCodeResult(200),
-        //            Success = true,
-        //            Message = null
-        //        };
-
-        //        return Json(new[] { new
-        //        {
-        //            Status  = status,
-        //            Details = result
-        //        }
-        //        });
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var status = new ResultModel
-        //        {
-        //            Status = new HttpStatusCodeResult(500),
-        //            Success = false,
-        //            Message = ex.ToString()
-        //        };
-
-        //        return Json(new[] { new
-        //        {
-        //            Status  = status,
-        //            Details = string.Empty
-        //        }
-        //        });
-        //    }
-
-        //}
 
     }
 

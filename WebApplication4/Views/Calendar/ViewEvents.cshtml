@@ -2,44 +2,73 @@
 
 <br />
 <br />
+
 <p>
-    @Html.ActionLink("Create New", "AddEvents")
+    @Html.ActionLink("ทำการสร้างข้อมูล", "AddEvents")
 </p>
 
 <table class="table">
-    <tr>
-        <th> </th>
-        <th>@Html.DisplayNameFor(model => model.EventDate)</th>
-        <th>@Html.DisplayNameFor(model => model.StartTime)</th>
-        <th>@Html.DisplayNameFor(model => model.EndTime)</th>
-        <th>@Html.DisplayNameFor(model => model.Subject)</th>
-        <th></th>
-    </tr>
-
-    @*เพิ่มลำดับ*@
-    @{
-        int counter = 1;
-    }
-
-    @foreach (var item in Model)
-    {
+    <thead>
         <tr>
-            <td>@counter</td>
-            @{
-                counter++;
-            }
-            <td>@Html.DisplayFor(modelItem => item.EventDate)</td>
-            <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
-            <td>@Html.DisplayFor(modelItem => item.EndTime)</td>
-            <td>@Html.DisplayFor(modelItem => item.Subject)</td>
-            <td>
-                @Html.ActionLink("Edit", "UpdateEvents", new { id = item.EventID })
-                @Html.ActionLink("Delete", "DeleteEvents", new { id = item.EventID })
-            </td>
+            <th>ลำดับ</th>
+            <th>วันที่</th>
+            <th>เวลาเริ่มต้น</th>
+            <th>เวลาสิ้นสุด</th>
+            <th>หัวเรื่อง</th>
+            <th>แผนกงาน</th>
+            @*<th>รายละเอียด</th>*@
         </tr>
-    }
+    </thead>
+    <tbody>
+        @{
+            int counter = 1;
+            if (Model != null)
+            {
+                DateTime today = DateTime.Today;
+                int currentDayOfWeek = (int)today.DayOfWeek;
+                DateTime startOfWeek = today.AddDays(-(currentDayOfWeek - 1));
+                DateTime endOfWeek = today.AddDays(7 - currentDayOfWeek);
 
+                var filteredData = Model.Where(item =>
+                {
+                    DateTime eventDate = DateTime.Parse(item.Event_Date);
+                    return eventDate >= startOfWeek && eventDate <= endOfWeek;
+                })
+                .OrderBy(item => DateTime.Parse(item.Event_Date))
+                .ToList();
+
+                foreach (var item in filteredData)
+                {
+                    <tr>
+                        <td>@counter</td>
+                        @{
+                            counter++;
+                        }
+                        <td>@Html.DisplayFor(modelItem => item.Event_Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Start_Time)</td>
+                        <td>@Html.DisplayFor(modelItem => item.End_Time)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Department)</td>
+                        <td class="d-flex align-items-center">
+                            @Html.ActionLink("แก้ไข", "EditEvents", new { EventID = item.EventID }, new { @class = "btn btn-warning me-2" })
+                            <input type="button" value="ลบ" class="btn btn-danger delete-btn" data-id="@item.EventID" />
+                            @*@Html.ActionLink("ลบ", "DeleteEvents", new { EventID = item.EventID }, new { @class = "btn btn-danger" })*@
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
 </table>
+
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
 
 
 

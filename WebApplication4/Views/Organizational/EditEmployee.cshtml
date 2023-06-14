@@ -1,0 +1,95 @@
+﻿@model WebApplication5Test.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "EditEmployee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.standalone.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        .content h1 {
+            /*width: 50%;*/
+            color: #000000;
+            font-size: 25px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .styled-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .dropdown-divider {
+            height: 0;
+            margin: 0.5rem 0;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+        .custom-dropdown {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('/Images/icons8-arrow-24.png');
+            background-repeat: no-repeat;
+            background-position: right center;
+            padding-right: 25px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <br />
+    <div class="styled-box">
+        <div class="content">
+            <h1 class="title">แก้ไขข้อมูลบุคลากร </h1>
+        </div>
+        <div class="dropdown-divider"></div>
+        @using (Html.BeginForm("EditEmployee", "Organizational", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.name, "ชื่อ")
+                @Html.TextBoxFor(Model => Model.name, new { @class = "form-control", placeholder = "กรอกชื่อ" })
+            </div><br />
+            <div class="form-group">
+                @Html.LabelFor(m => m.position, "ตำแหน่ง")
+                @Html.DropDownListFor(m => m.position, Model.ItemsPosition, "กรุณาเลือก", new { @class = "form-control custom-dropdown" })
+            </div><br />
+            <div class="form-group">
+                @Html.LabelFor(m => m.department, "ฝ่าย")
+                @Html.DropDownListFor(m => m.department, Model.ItemsDepartment, "กรุณาเลือก", new { @class = "form-control custom-dropdown" })
+            </div><br />
+            <div class="form-group">
+                @Html.LabelFor(m => m.division, "แผนก")
+                @Html.DropDownListFor(m => m.division, Model.ItemsDivision, "กรุณาเลือก", new { @class = "form-control custom-dropdown" })
+            </div><br />
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.status, "สถานะ")
+                @Html.DropDownListFor(m => m.status, new List<SelectListItem>
+                {
+                new SelectListItem { Text="ปกติ", Value="ปกติ" },
+                new SelectListItem { Text="ลาออก", Value="ลาออก" }
+                }, "กรุณาเลือก", new { @class = "form-control custom-dropdown" })
+            </div><br />
+            <div class="form-group">
+                <label for="ImageFile">ภาพประกอบ:</label>
+                <input type="file" name="ImageFile" id="ImageFile" class="form-control" />
+            </div><br />
+ 
+            <div class=form-group>
+                <input type="reset" value="รีเซ็ต" class="btn btn-danger" />
+                <input type="submit" value="บันทึกข้อมูล" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+
+</body>
+
+

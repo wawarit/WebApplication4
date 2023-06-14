@@ -1,0 +1,293 @@
+﻿@model WebApplication5Test.Models.FileModel
+
+@{
+    ViewBag.Title = "Create_file";
+
+}
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.standalone.css" />
+
+    <style>
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /*border: 1px solid red;*/
+        }
+
+        .title {
+            width: 50%;
+            justify-content: center;
+            align-items: center;
+            color: #000000;
+            font-size: 25px;
+            font-weight: normal;
+            text-align: center;
+            margin: 0 20px 0 0;
+            /* border: 1px solid red;*/
+        }
+
+        hr.style19 {
+            width: 100%;
+            border-top: 4px solid #1E5F74;
+            color: #1E5F74;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content h1 {
+            /*width: 50%;*/
+            color: #000000;
+            font-size: 25px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .content btn {
+            float: right;
+            width: 200px;
+            margin: 10px;
+        }
+
+        .styled-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .dropdown-divider {
+            height: 0;
+            margin: 0.5rem 0;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%; 
+            height: 30%;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #keyword-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #keyword-form input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        #submit {
+            background-color: #6495ED;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            align-items: center;
+            display: flex;
+            justify-content: flex-end;
+            float: right;
+            position: relative;
+            font-size: 14px;
+            font-weight: 400;
+            box-sizing: border-box;
+            text-decoration: none;
+            text-align: center;
+            min-width: 80px;
+            height: 32px;
+        }
+        .custom-dropdown {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('/Images/icons8-arrow-24.png');
+            background-repeat: no-repeat;
+            background-position: right center;
+            padding-right: 25px;
+            position: relative;
+        }
+    </style>
+
+}
+<div class="content">
+    <h1 class="title">Knowledge Management</h1>
+</div>
+<hr class="style19"><!--end content-->
+
+<br />
+
+@*<p>This is folder ID @ViewBag.Id</p>*@
+<div class="styled-box">
+    <div class="content">
+        <h1 class="title">เพิ่มเอกสาร </h1>
+        <button type="button" class="btn btn-primary" id="create-keyword-btn">เพิ่ม Keyword</button>
+        <div id="keyword-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>เพิ่ม Keyword</h2>
+                <form id="keyword-form">
+                    <label for="keyword-input">Keyword:</label>
+                    <input type="text" id="keyword-input" name="keyword-input">
+                    <button id="submit">บันทึกข้อมูล</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    @using (Html.BeginForm("Create_file", "Knowledge", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.file_name, "ชื่อเอกสาร")
+            @Html.TextBoxFor(model => model.file_name, new { @class = "form-control", placeholder = "กรอกชื่อเอกสาร" })
+            @*@Html.ValidationMessageFor(model => model.file_name, "", new { @class = "text-danger" })*@
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(model => model.keyword, "KEYWORD")
+            @Html.DropDownListFor(m => m.keyword, new List<SelectListItem>
+            {
+            new SelectListItem { Text="เรียนรู้", Value="เรียนรู้" },
+            new SelectListItem { Text="ทดสอบ", Value="ทดสอบ" }
+            }, "กรุณาเลือก", new { @class = "form-control custom-dropdown" })
+            @*@Html.ValidationMessageFor(model => model.keyword, "", new { @class = "text-danger" })*@
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(model => model.genre, "ประเภทเอกสาร")
+            @Html.DropDownListFor(model => model.genre, ViewBag.DocumentTypes as IEnumerable<SelectListItem>, "---เลือกประเภทเอกสาร---", new { @class = "form-control custom-dropdown" })
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(model => model.releaseDate, "วันที่ลงเอกสาร")
+            <div class='input-group date' id='dtReleaseDate'>
+                @Html.TextBoxFor(model => model.releaseDate, new { @type = "date", @class = "form-control datepicker", placeholder = "กรอกวันที่ลงเอกสาร" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <br />
+        <script>
+            // Get the current date
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+            var day = ("0" + currentDate.getDate()).slice(-2);
+            var formattedDate = year + "-" + month + "-" + day;
+            document.getElementById("releaseDate").value = formattedDate;
+            document.getElementById("releaseDate").addEventListener("input", function () {
+                this.setAttribute("type", "date");
+            });
+        </script>
+        <div class="form-group">
+            @Html.Label("fileuploadFile", "เอกสาร (ขนาดของไฟล์ต้องไม่เกิน 5 MB)")
+            <input type="file" id="fileUpload" name="fileUpload" class="form-control" />
+        </div>
+        <br />
+        <script>
+            $(document).ready(function () {
+                var folderId = '@ViewBag.Id';
+                $("#folder_id").val(folderId);
+            });
+        </script>
+        @Html.HiddenFor(model => model.folder_id, new { Value = ViewBag.Id })
+        <div class=form-group>
+            <input type="reset" value="รีเซ็ต" class="btn btn-danger" />
+            <input type="submit" value="บันทึกข้อมูล" class="btn btn-primary" />
+        </div>
+
+
+    }
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var button = document.getElementById("create-keyword-btn");
+    var modal = document.getElementById("keyword-modal");
+
+    // ให้โมดัลปรากฏเมื่อคลิกที่ปุ่ม
+    button.onclick = function () {
+        modal.style.display = "block";
+    };
+
+    // ให้โมดัลหายเมื่อคลิกที่ปุ่มปิด
+    var closeButton = document.getElementsByClassName("close")[0];
+    closeButton.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // ให้โมดัลหายเมื่อคลิกนอกพื้นที่ของโมดัล
+    window.addEventListener("click", function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // ให้ส่งข้อมูลเมื่อคลิกที่ปุ่ม "เพิ่ม"
+    var submitButton = document.getElementById("submit");
+    submitButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        var keywordInput = document.getElementById("keyword-input");
+        var keyword = keywordInput.value;
+        console.log("เพิ่ม Keyword: " + keyword);
+        modal.style.display = "none";
+    });
+</script>
+
+@section Scripts
+    {
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+
+}

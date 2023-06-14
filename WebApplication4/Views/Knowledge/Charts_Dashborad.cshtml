@@ -1,0 +1,251 @@
+﻿
+@{
+    ViewBag.Title = "Charts_Dashborad";
+}
+<header>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.standalone.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.min.js" integrity="sha512-mlz/Fs1VtBou2TrUkGzX4VoGvybkD9nkeXWJm3rle0DPHssYYx4j+8kIS15T78ttGfmOjH0lLaBXGcShaVkdkg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            width: 50%;
+            color: #000000;
+            font-size: 30px;
+            font-weight: normal;
+            margin: 0 20px 0 0;
+            left: auto;
+        }
+
+        hr.style19 {
+            width: 100%;
+            border-top: 4px solid #1E5F74;
+            color: #1E5F74;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .styled-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: auto;
+            height: 500px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .row {
+            --bs-gutter-x: 5rem;
+            --bs-gutter-y: 0;
+            display: flex;
+            flex: 1 0 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: calc(var(--bs-gutter-y) * -1);
+            margin-right: calc(var(--bs-gutter-x) / -2);
+            margin-left: calc(var(--bs-gutter-x) / -2);
+        }
+        .chart-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .chart-container {
+            width: 221px;
+            height: 221px;
+            margin: 10px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #div1 {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+        .chart-container2 {
+            width: 439px;
+            height: 194px;
+            margin: 10px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #div2 {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+    </style>
+</header>
+
+<body>
+    <br />
+    <div class="content">
+        <h2 class="title">Dashborad</h2>
+    </div>
+    <hr class="style19">
+    <br />
+    <div class="styled-box">
+        <br />
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <a href="#" style="text-decoration: none;">
+                    <div class="small-box" style="padding: 10px 10px 10px 10px; border-radius: 15px; background-color:#18A0FB;">
+                        <div class="inner">
+                            <h1 style="text-align:center;color:#ffffff;">@ViewBag.TotalViews</h1>
+                            <p style="text-align:center;color: #ffffff;">จำนวนยอดดูเอกสาร &nbsp; <img src="~/Images/icons8-eye-24.png" alt=" " width="20" height="20"></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <a href="#" style="text-decoration: none;">
+                    <div class="small-box" style="padding: 10px 10px 10px 10px; border-radius: 15px; background-color: #3795BD; ">
+                        <div class="inner">
+                            <h1 style="text-align:center;color:#ffffff;">@ViewBag.TotalDownloads</h1>
+                            <p style="text-align:center;color: #ffffff;">จำนวนยอดดาวน์โหลด &nbsp; <img src="~/Images/icons8-download-24.png" alt=" " width="20" height="20"></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <a href="#" style="text-decoration: none;">
+                    <div class="small-box" style="padding: 10px 10px 10px 10px; border-radius: 15px; background-color : #FF0760; ">
+                        <div class="inner">
+                            <h1 style="text-align:center;color:#ffffff;">0</h1>
+                            <p style="text-align:center;color: #ffffff;">จำนวนไฟล์ในถังขยะ &nbsp; <img src="~/Images/icons8-trash-24.png" alt=" " width="20" height="20"></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-12 mt-4">
+                <div class="card-body">
+                    <div class="chart-row">
+                        <div id="div1" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                            <p style="margin-bottom: 0;">จำนวนเอกสารทั้งหมดที่มีตามประเภทเอกสาร</p>
+                            <div class="chart-container">
+                                <canvas id="doughnutChart" class="chartjs-render-monitor" style="max-width: 221px; max-height: 221px;"></canvas>
+                            </div>
+                        </div>
+
+                        <div id="div2" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                            <p style="margin-bottom: 0;">ยอดการดาวน์โหลดเอกสารตามประเภทเอกสาร</p>
+                            <div class="chart-container2">
+                                <canvas id="horizontalBarChart" class="chartjs-render-monitor" style="max-width:439px; max-height:194px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Knowledge/HorizontalBarChart',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var categories = data.categories;
+                var downloadCounts = data.downloadCounts;
+
+                // สร้างกราฟ
+                var ctx = document.getElementById('horizontalBarChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: categories,
+                        datasets: [
+                            {
+                                label: 'ยอดการดาวน์โหลดเอกสารตามประเภทเอกสาร',
+                                data: downloadCounts,
+                                backgroundColor: '#FFAACF',
+                                borderColor: '#FFAACF',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                ticks: {
+                                    precision: 0,
+                                    stepSize: 1,
+                                    callback: function (value) {
+                                        return value + ' ครั้ง';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Knowledge/DoughnutChartData',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var documentCounts = data.documentCounts;
+                var genres = data.genres;
+
+                // สร้างกราฟ
+                var ctx = document.getElementById('doughnutChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: genres,
+                        datasets: [{
+                            data: documentCounts,
+                            backgroundColor: ['#00FFCA', '#05BFDB', '#088395', '#0A4D68', '#96BAFF', '#576CBC', '#0B2447', '#19376D', '#576CBC'],
+                            borderColor: '#ffffff',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {}
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    });
+</script>
+
+
+
+
+
+

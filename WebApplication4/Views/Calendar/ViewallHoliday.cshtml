@@ -1,0 +1,125 @@
+﻿<style>
+    #new-folder-items {
+        margin: 0 auto;
+        border: 1px solid red;
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        justify-content: center;
+        align-items: center;
+        margin-right: 30px;
+    }
+
+    .upload-btn {
+        background-color: #dddddd;
+        color: black;
+        padding: 8px 16px;
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        /*margin-right: 0px;
+        margin-left: 300px;
+        justify-content: center;
+        align-items: center;*/
+    }
+
+    .styled-table {
+        border-collapse: collapse;
+        margin: auto;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        /*width: 80%;*/
+    }
+
+        .styled-table thead tr {
+            background-color: #f2f2f2;
+            color: #000000;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #f2f2f2;
+            }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+@{
+    int currentYear = DateTime.Today.Year;
+    int selectedYear = currentYear; // Default selected year is the current year
+
+    if (!string.IsNullOrEmpty(Request.QueryString["year"]))
+    {
+        selectedYear = int.Parse(Request.QueryString["year"]);
+    }
+}
+
+<div>
+    <strong>Filter by Year:</strong>
+    <select id="year-filter">
+        @{
+            for (int year = currentYear; year >= 2021; year--)
+            {
+                <option value="@year" @(selectedYear == year ? "selected" : "")>@year</option>
+            }
+        }
+    </select>
+</div>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>ลำดับ</th>
+            <th>วันที่</th>
+            <th>รายละเอียด</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model != null)
+            {
+                int counter = 1;
+                foreach (var item in Model)
+                {
+                    DateTime holidayDate = DateTime.Parse(item.Day_Holiday);
+                    int holidayYear = holidayDate.Year;
+
+                    if (selectedYear == holidayYear)
+                    {
+                        <tr>
+                            <td>@counter</td>
+                            <td>@item.Day_Holiday</td>
+                            <td>@item.Details</td>
+                        </tr>
+                        counter++;
+                    }
+                }
+            }
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $("#year-filter").change(function () {
+            var selectedYear = $(this).val();
+            var url = "@Url.Action("ViewallHoliday", "Calendar")?year=" + selectedYear;
+            window.location.href = url;
+        });
+    });
+</script>
+

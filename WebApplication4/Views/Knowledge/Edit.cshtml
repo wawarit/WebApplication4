@@ -1,0 +1,179 @@
+﻿@model WebApplication5Test.Models.FileModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.standalone.css" />
+    <style>
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /*border: 1px solid red;*/
+        }
+
+        .title {
+            width: 50%;
+            justify-content: center;
+            align-items: center;
+            color: #000000;
+            font-size: 25px;
+            font-weight: normal;
+            text-align: center;
+            margin: 0 20px 0 0;
+            /* border: 1px solid red;*/
+        }
+
+        hr.style19 {
+            width: 100%;
+            border-top: 4px solid #1E5F74;
+            color: #1E5F74;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content h1 {
+            /*width: 50%;*/
+            color: #000000;
+            font-size: 25px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .styled-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .dropdown-divider {
+            height: 0;
+            margin: 0.5rem 0;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+        .custom-dropdown {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('/Images/icons8-arrow-24.png');
+            background-repeat: no-repeat;
+            background-position: right center;
+            padding-right: 25px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1 class="title">Knowledge Management</h1>
+    </div>
+    <hr class="style19"><!--end content-->
+
+    <br />
+    <div class="styled-box">
+        <div class="content">
+            <h1 class="title">แก้ไขข้อมูลเอกสาร</h1>
+        </div>
+        <div class="dropdown-divider"></div>
+
+        @using (Html.BeginForm("edit", "Knowledge", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.file_name, "ชื่อเอกสาร")
+                @Html.TextBoxFor(model => model.file_name, new { @class = "form-control", placeholder = "กรอกชื่อเอกสาร" })
+            </div>
+            <br />
+            <div class="form-group">
+                @Html.LabelFor(model => model.keyword, "KEYWORD")
+                @Html.DropDownListFor(m => m.keyword, new List<SelectListItem>
+                {
+                new SelectListItem { Text="เรียนรู้", Value="เรียนรู้" },
+                new SelectListItem { Text="ทดสอบ", Value="ทดสอบ" }
+                }, "กรุณาเลือก", new { @class = "form-control custom-dropdown" })
+            </div>
+            <br />
+            <div class="form-group">
+                @Html.LabelFor(model => model.genre, "ประเภทเอกสาร")
+                @Html.DropDownListFor(model => model.genre, ViewBag.DocumentTypes as IEnumerable<SelectListItem>, "---เลือกประเภทเอกสาร---", new { @class = "form-control custom-dropdown" })
+            </div>
+            <br />
+            <div class="form-group">
+                @Html.LabelFor(model => model.releaseDate, "วันที่ลงเอกสาร")
+                <div class='input-group date' id='dtReleaseDate'>
+                    @Html.TextBoxFor(model => model.releaseDate, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "กรอกวันที่ลงเอกสาร" })
+
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                @Html.LabelFor(model => model.editDate, "วันที่แก้ไขเอกสาร")
+                <div class='input-group date' id='dtEditDate'>
+                    @Html.TextBoxFor(model => model.editDate, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control datepicker", placeholder = "กรอกวันที่แก้ไขเอกสาร" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <br />
+            <script>
+                var currentDate = new Date();
+                var year = currentDate.getFullYear();
+                var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+                var day = ("0" + currentDate.getDate()).slice(-2);
+                var formattedDate = year + "-" + month + "-" + day;
+                document.getElementById("editDate").value = formattedDate;
+                document.getElementById("editDate").addEventListener("input", function () {
+                    this.setAttribute("type", "date");
+                });
+            </script>
+            <div class="form-group">
+                @Html.Label("fileuploadFile", "เอกสาร (ขนาดของไฟล์ต้องไม่เกิน 5 MB)")
+                <input type="file" id="fileUpload" name="fileUpload" class="form-control" />
+            </div>
+            <br />
+            <script>
+                $(document).ready(function () {
+                    var folderId = '@ViewBag.Id';
+                    $("#folder_id").val(folderId);
+                });
+            </script>
+            @Html.HiddenFor(model => model.folder_id, new { Value = ViewBag.Id })
+            <div class=form-group>
+                <input type="reset" value="Reset" class="btn btn-danger" />
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+    @section Scripts
+    {
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript">
+            function validateOnSubmit() {
+                if (!$('#duration').val()) {
+                    $('span[data-valmsg-for="errDuration"]').text('The duration is required.');
+                }
+            }
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+
+
+    }
+</body>
+</html>

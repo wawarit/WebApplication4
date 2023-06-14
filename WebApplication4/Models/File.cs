@@ -6,13 +6,17 @@ using System.Web.Mvc;
 
 namespace WebApplication4.Models
 {
-    public class File
+    public class FileModel
     {
         public int id { get; set; }
         public string file_name { get; set; }
         public string genre { get; set; }
         public DateTime? releaseDate { get; set; }
         public string uploadFile { get; set; }
+        public int folder_id { get; set; }
+       
+        //public string FileModel { get; set; }
+
 
     }
 }

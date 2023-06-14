@@ -1,0 +1,31 @@
+﻿@using (Html.BeginForm("UploadExcel", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="file-upload">
+        <label for="fileUpload">เลือกไฟล์:</label>
+        <div class="input-group">
+            <input type="text" id="file-name" class="form-control" readonly />
+            <div class="input-group-append">
+                <button type="button" class="btn btn-primary" onclick="selectFile()">Browse</button>
+            </div>
+        </div>
+        <input type="file" id="fileUpload" name="fileUpload" accept=".xlsx, .xls" style="display: none;" />
+    </div>
+    <div>
+        <input type="submit" value="อัพโหลดไฟล์" />
+    </div>
+}
+
+
+<script>
+    function selectFile() {
+        document.getElementById('fileUpload').click();
+    }
+
+    document.getElementById('fileUpload').addEventListener('change', function () {
+        var fileName = this.value.split('\\').pop();
+        document.getElementById('file-name').value = fileName;
+    });
+</script>
+
+
+
