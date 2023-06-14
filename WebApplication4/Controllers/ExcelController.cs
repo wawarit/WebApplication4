@@ -1,5 +1,4 @@
 ﻿using ExcelDataReader;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -107,8 +106,8 @@ namespace WebApplication4.Controllers
                 // เซฟข้อมูลเกี่ยวกับไฟล์ลงในฐานข้อมูล
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
-                    string query = @"delete from Dtb_Holiday where day_holiday=@Holiday;insert into Dtb_Holiday values(@Holiday, @Details)";
-
+                    string query = @"insert into Dtb_Holiday values(@Holiday, @Details)";
+                    //delete from Dtb_Holiday where day_holiday = @Holiday;
                     con.Open();
                     foreach (DataRow row in getDataExcel.Rows)
                     {
