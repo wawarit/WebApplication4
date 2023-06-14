@@ -14,7 +14,7 @@ namespace WebApplication3.Controllers
 {
     public class CalendarController : Controller
     {
-        private readonly string sqlConn = ConfigurationManager.ConnectionStrings["Project"].ToString();
+        private readonly string sqlConn = ConfigurationManager.ConnectionStrings["Project1"].ToString();
 
         //private object db;
 

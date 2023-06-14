@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
@@ -703,6 +702,7 @@ namespace WebApplication5Test.Controllers
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     con.Open();
+                    cmd.CommandTimeout = 60000;
                     totalViews = (int)cmd.ExecuteScalar();
                 }
                 query = "SELECT SUM(download_count) FROM CreateFiles";

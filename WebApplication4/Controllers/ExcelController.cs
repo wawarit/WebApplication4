@@ -23,7 +23,7 @@ namespace WebApplication4.Controllers
     {
         //private string sqlConn;
         
-        private readonly string sqlConn = ConfigurationManager.ConnectionStrings["Project"].ToString();
+        private readonly string sqlConn = ConfigurationManager.ConnectionStrings["Project1"].ToString();
         public ActionResult UploadExcel()
         {
             return View();

@@ -14,7 +14,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WebApplication4</RootNamespace>
     <AssemblyName>WebApplication4</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +79,7 @@
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -98,12 +100,9 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -148,6 +147,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -170,16 +170,23 @@
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\KnowledgeController.cs" />
+    <Compile Include="Controllers\OrganizationalController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AddOrganizationalViewModel.cs" />
     <Compile Include="Models\DataEvents.cs" />
     <Compile Include="Models\DataHoliday.cs" />
     <Compile Include="Models\DataExcel.cs" />
+    <Compile Include="Models\EmployeeModel.cs" />
     <Compile Include="Models\EventCalendarModel.cs" />
     <Compile Include="Models\excelFile.cs" />
     <Compile Include="Models\File.cs" />
+    <Compile Include="Models\FileModel.cs" />
+    <Compile Include="Models\FolderModel.cs" />
     <Compile Include="Models\Holiday.cs" />
+    <Compile Include="Models\PositionModel.cs" />
     <Compile Include="Models\ResultModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation\MVC5\ViewAsPdf.cs" />
@@ -194,7 +201,15 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\icons8-arrow-24.png" />
+    <Content Include="Images\icons8-download-24.png" />
+    <Content Include="Images\icons8-eye-24.png" />
+    <Content Include="Images\icons8-folder-48.png" />
+    <Content Include="Images\icons8-trash-24.png" />
+    <Content Include="Images\Logo.png" />
     <Content Include="Images\Logo_สมาคมสโมสรนักลงทุน0.png" />
+    <Content Include="Images\test1.png" />
+    <Content Include="Images\test2.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -208,6 +223,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Uploads\EmployeeImages\test.jpg" />
+    <Content Include="Uploads\EmployeeImages\ทดสอบ2.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -239,9 +256,21 @@
     <None Include="Views\Calendar\ViewHoliday.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Excel\UploadExcel.cshtml" />
+    <Content Include="Views\Organizational\AddEmployee.cshtml" />
+    <Content Include="Views\Organizational\AddOrganizational.cshtml" />
+    <Content Include="Views\Organizational\EditEmployee.cshtml" />
+    <Content Include="Views\Organizational\organizationChart.cshtml" />
+    <Content Include="Views\Knowledge\Charts_Dashborad.cshtml" />
+    <Content Include="Views\Knowledge\Create_file.cshtml" />
+    <Content Include="Views\Knowledge\CreateFoldersKM.cshtml" />
+    <Content Include="Views\Knowledge\Edit.cshtml" />
+    <Content Include="Views\Knowledge\KM .cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\Images\" />
+    <Folder Include="Uploads\PDF\" />
+    <Folder Include="Uploads\Word\" />
     <Folder Include="Views\AppDbContext\" />
     <Folder Include="Views\DataEvents\" />
     <Folder Include="Views\DataTable\" />
@@ -249,8 +278,6 @@
     <Folder Include="Views\excelFile\" />
     <Folder Include="Views\File\" />
     <Folder Include="Views\Holiday\" />
-    <Folder Include="Views\Knowldege\" />
-    <Folder Include="Views\Knowledge\" />
     <Folder Include="Views\Returndata\" />
     <Folder Include="Views\UpdateandDelete\" />
   </ItemGroup>
