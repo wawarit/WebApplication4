@@ -11,5 +11,7 @@ namespace WebApplication4.Models
         public HttpStatusCodeResult Status { get; set; }
         public bool Success { get; set; }
         public string Message { get; set; }
+
+        public int RowCount { get; set; } // Add this property
     }
 }

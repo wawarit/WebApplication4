@@ -1,8 +1,8 @@
 ﻿@model WebApplication4.Models.DataEvents
 
 @*@{
-    ViewBag.Title = "AddEvents";
-}*@
+        ViewBag.Title = "AddEvents";
+    }*@
 
 @*<h2>AddEvents</h2>*@
 
@@ -11,107 +11,116 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>DataEvents</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @*<div class="form-group">
-            @Html.LabelFor(model => model.EventID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EventID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EventID, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+       
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.EventID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EventID, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EventID, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.EventDate, "วันกิจกรรมประจำวัน")
+            <div class='input-group date' id='dtReleaseDate'>
+                @Html.TextBoxFor(model => model.EventDate, new { @type = "date", @class = "form-control datepicker", placeholder = "กรอกวันกิจกรรมประจำวัน" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
             </div>
-        </div>*@
-    <div class="form-group">
-        @Html.LabelFor(model => model.EventDate, "วันกิจกรรมประจำวัน")
-        <div class='input-group date' id='dtReleaseDate'>
-            @Html.TextBoxFor(model => model.EventDate, new { @type = "date", @class = "form-control datepicker", placeholder = "กรอกวันกิจกรรมประจำวัน" })
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.StartTime, "เวลาเริ่มต้น")
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกเวลาเริ่มต้น", type = "time" } })
-            @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.EndTime, "เวลาสิ้นสุด")
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกเวลาสิ้นสุด", type = "time" } })
-            @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Subject, "หัวเรื่อง")
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกชื่อหัวเรื่อง" } })
-            @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Detail, "รายละเอียดกิจกรรม")
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Detail, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกรายละเอียดกิจกรรม" } })
-            @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Department, "แผนกงาน")
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.Department, new List<SelectListItem>
-            {
-                new SelectListItem { Text = "แผนกบริการข้อมูลวัตถุดิบ", Value = "แผนกบริการข้อมูลวัตถุดิบ" },
-                new SelectListItem { Text = "แผนกบริการข้อมูลเครื่องจักร", Value = "แผนกบริการข้อมูลเครื่องจักร" },
-                new SelectListItem { Text = "แผนกบริการส่วนภูมิภาค", Value = "แผนกบริการส่วนภูมิภาค" },
-                new SelectListItem { Text = "แผนกฝึกอบรมและบริการนักลงทุน", Value = "แผนกฝึกอบรมและบริการนักลงทุน" },
-                new SelectListItem { Text = "แผนกลูกค้าสัมพันธ์และสื่อสารองค์กร", Value = "แผนกลูกค้าสัมพันธ์และสื่อสารองค์กร" },
-                new SelectListItem { Text = "แผนก Counter Service & Call Center", Value = "แผนก Counter Service & Call Center" },
-                new SelectListItem { Text = "แผนกบัญชี", Value = "แผนกบัญชี" },
-                new SelectListItem { Text = "แผนกการเงิน", Value = "แผนกการเงิน" },
-                new SelectListItem { Text = "แผนกพัฒนาระบบ", Value = "แผนกพัฒนาระบบ" },
-                new SelectListItem { Text = "แผนกบริหารระบบ", Value = "แผนกบริหารระบบ" },
-                new SelectListItem { Text = "แผนกบุคล", Value = "แผนกบุคล" },
-                new SelectListItem { Text = "แผนกบริหารงานทั่วไป", Value = "แผนกบริหารงานทั่วไป" },
-                new SelectListItem { Text = "แผนกจัดซื้อ", Value = "แผนกจัดซื้อ" }
-            }, "เลือกแผนกงาน", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    @*<div class="form-group">
-            @Html.LabelFor(model => model.Creator, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartTime, "เวลาเริ่มต้น")
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Creator, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Creator, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกเวลาเริ่มต้น", type = "time" } })
+                @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
             </div>
-        </div>*@
+        </div>
 
-    <br />
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-primary" />
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndTime, "เวลาสิ้นสุด")
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกเวลาสิ้นสุด", type = "time" } })
+                @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Subject, "หัวเรื่อง")
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกชื่อหัวเรื่อง" } })
+                @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Detail, "รายละเอียดกิจกรรม")
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Detail, new { htmlAttributes = new { @class = "form-control", placeholder = "กรอกรายละเอียดกิจกรรม" } })
+                @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Department, "แผนกงาน")
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Department, new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "แผนกทั้งหมด", Value = "แผนกทั้งหมด" },
+                    new SelectListItem { Text = "แผนกบริการข้อมูลวัตถุดิบ", Value = "แผนกบริการข้อมูลวัตถุดิบ" },
+                    new SelectListItem { Text = "แผนกบริการข้อมูลเครื่องจักร", Value = "แผนกบริการข้อมูลเครื่องจักร" },
+                    new SelectListItem { Text = "แผนกบริการส่วนภูมิภาค", Value = "แผนกบริการส่วนภูมิภาค" },
+                    new SelectListItem { Text = "แผนกฝึกอบรมและบริการนักลงทุน", Value = "แผนกฝึกอบรมและบริการนักลงทุน" },
+                    new SelectListItem { Text = "แผนกลูกค้าสัมพันธ์และสื่อสารองค์กร", Value = "แผนกลูกค้าสัมพันธ์และสื่อสารองค์กร" },
+                    new SelectListItem { Text = "แผนก Counter Service & Call Center", Value = "แผนก Counter Service & Call Center" },
+                    new SelectListItem { Text = "แผนกบัญชี", Value = "แผนกบัญชี" },
+                    new SelectListItem { Text = "แผนกการเงิน", Value = "แผนกการเงิน" },
+                    new SelectListItem { Text = "แผนกพัฒนาระบบ", Value = "แผนกพัฒนาระบบ" },
+                    new SelectListItem { Text = "แผนกบริหารระบบ", Value = "แผนกบริหารระบบ" },
+                    new SelectListItem { Text = "แผนกบุคล", Value = "แผนกบุคล" },
+                    new SelectListItem { Text = "แผนกบริหารงานทั่วไป", Value = "แผนกบริหารงานทั่วไป" },
+                    new SelectListItem { Text = "แผนกจัดซื้อ", Value = "แผนกจัดซื้อ" }
+                }, "เลือกแผนกงาน", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.Creator, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Creator, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Creator, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="สร้างข้อมูลกิจกรรมประจำสัปดาห์" class="btn btn-primary custom-button" />
+            </div>
         </div>
     </div>
-</div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+<style>
+    .custom-button {
+        color: black;
+        background-color: #46C2CB;
+    }
+</style>
+
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
 
 @*<script type="text/javascript">
-    $(function () {
-        $('#dtReleaseDate').datepicker({
-            defaultDate: new Date(),
+        $(function () {
+            $('#dtReleaseDate').datepicker({
+                defaultDate: new Date(),
+            });
         });
-    });
-</script>*@
+    </script>*@

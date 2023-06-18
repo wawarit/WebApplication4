@@ -88,6 +88,7 @@ namespace WebApplication4.Controllers
         {
             System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
 
+           
             if (fileUpload != null && fileUpload.ContentLength > 0)
             {
                 string fileName = Path.GetFileName(fileUpload.FileName);
@@ -100,46 +101,50 @@ namespace WebApplication4.Controllers
                 var getNameSheet = CheckSheetsName(filePath); // get ชื่อ sheet name excel
                 var getDataExcel = ReadExcelData(filePath, getNameSheet); //อ่านข้อมูลภายใน excel
 
+                int rowcount = 0;
+
+                var processedRows = new List<DataHoliday>();
                 //// เช็คไฟล์ที่มีอยู่
                 //var existingData = GetExistingDataFromDatabase();
 
                 // เซฟข้อมูลเกี่ยวกับไฟล์ลงในฐานข้อมูล
+
                 using (SqlConnection con = new SqlConnection(sqlConn))
                 {
-                    string query = @"insert into Dtb_Holiday values(@Holiday, @Details)";
+                    string query = @"delete from Dtb_Holiday where day_holiday = @Holiday; insert into Dtb_Holiday values(@Holiday, @Details)";
                     //delete from Dtb_Holiday where day_holiday = @Holiday;
                     con.Open();
+                    
                     foreach (DataRow row in getDataExcel.Rows)
                     {
                         //// ตรวจสอบว่ามีข้อมูลอยู่ในฐานข้อมูลหรือไม่
                         //bool dataExists = CheckIfDataExists(row, existingData);
                         //if (!dataExists)
+                        if (row["Day_Holiday"].ToString() == "") continue;
                         using (var cmd = new SqlCommand(query, con))
                         {
                             cmd.Parameters.AddWithValue("@Holiday", Convert.ToDateTime(row["Day_Holiday"] == DBNull.Value ? null : row["Day_Holiday"].ToString()));
+                           
                             cmd.Parameters.AddWithValue("@Details", row["Details"] == DBNull.Value ? null : row["Details"].ToString());
 
                             cmd.ExecuteNonQuery();
+                            rowcount++;
                         }
                     }
 
-                    //con.Open();
-                    //using (var cmd = new SqlCommand(query, con))
-                    //{
-                    //    cmd.Parameters.AddWithValue("@Holiday", model.Day_Holiday);
-                    //    cmd.Parameters.AddWithValue("@Details", model.Details);
-
-                    //    cmd.ExecuteNonQuery();
-                    //    con.Close();
-                    //}
                 }
+
+                // ...
+
                 var status = new ResultModel
                 {
                     Status = new HttpStatusCodeResult(200),
                     Success = true,
-                    Message = "อัปโหลดไฟล์สำเร็จ."
+                    Message = "อัปโหลดไฟล์สำเร็จ.",
+                    RowCount = rowcount /*+ rowcount.ToString() + " รายการ"*/
                 };
 
+                
                 return Json(new[]
                 {
                     new
@@ -148,6 +153,10 @@ namespace WebApplication4.Controllers
                         Details = string.Empty
                     }
                 });
+
+                // ...
+
+
             }
             // กรณีไม่มีไฟล์ที่อัปโหลด
             ModelState.AddModelError("fileUpload", "กรุณาเลือกไฟล์ที่ต้องการอัปโหลด");

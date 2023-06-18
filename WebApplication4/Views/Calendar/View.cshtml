@@ -26,26 +26,298 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.dataTableaHoliday)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.dataTableEvents)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Holiday)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Details)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.dataTableaHoliday)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dataTableEvents)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Holiday)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Details)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
 
 </table>
+
+@*@model IEnumerable<WebApplication5Test.Models.EmployeeModel>*@
+@*@model Tuple<List<EmployeeModel>, IEnumerable<SelectListItem>, IEnumerable<SelectListItem>>*@
+@model WebApplication5Test.Models.AddOrganizationalViewModel
+
+
+@{
+    ViewBag.Title = "AddOrganizational";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <style>
+        .styled-table {
+            border-collapse: collapse;
+            margin: auto;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 1200px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            /*width: 80%;*/
+        }
+
+            .styled-table thead tr {
+                background-color: #f2f2f2;
+                color: #000000;
+                text-align: left;
+            }
+
+            .styled-table th,
+            .styled-table td {
+                padding: 12px 15px;
+            }
+
+            .styled-table tbody tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+                .styled-table tbody tr:last-of-type {
+                    border-bottom: 2px solid #f2f2f2;
+                }
+
+        .thumbnail-image {
+            /*width: 125px;
+            height: 150px;
+            object-fit: cover;*/
+            width: auto;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .custom-dropdown {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('/Images/icons8-arrow-24.png');
+            background-repeat: no-repeat;
+            background-position: right center;
+            padding-right: 25px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <a href="@Url.Action("AddEmployee","Organizational")" class="btn btn-primary">เพิ่มบุคลากร</a><br />
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <label for="searchInput" class="col-sm-2 col-form-label col-form-label-sm">คำค้นหา : </label>
+            <div class="col-sm-10">
+                <input type="text" id="searchInput" class="form-control" placeholder="พิมพ์คำค้นหา...." aria-label="search">
+            </div>
+        </div>
+        <div class="col">
+            <label for="selectedPosition" class="col-sm-2 col-form-label col-form-label-sm">ตำแหน่ง : </label>
+            <label class="visually-hidden" for="specificSizeSelect">Preference</label>
+            @Html.DropDownListFor(m => m.Positions, Model.Positions, "---เลือกตำแหน่ง---", new { @class = "form-select", id = "selectedPosition" })
+
+        </div>
+
+        <div class="col">
+            <label for="selectedDivision" class="col-sm-2 col-form-label col-form-label-sm">แผนก : </label>
+            <label class="visually-hidden" for="specificSizeSelect">Preference</label>
+            @Html.DropDownListFor(m => m.Divisions, Model.Divisions, "---เลือกแผนก---", new { @class = "form-select", id = "selectedDivision" })
+
+        </div>
+    </div><br />
+    <div class="col text-end">
+        <button type="button" class="btn btn-primary" id="searchButton">ค้นหา</button>
+        <button type="button" class="btn btn-secondary" id="resetButton">รีเซ็ตข้อมูล</button>
+    </div><br />
+    @*<p>This is Image Url : @ViewBag.ImageUrl</p>*@
+
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>ลำดับ</th>
+                <th>ภาพประกอบ</th>
+                <th>รายละเอียด</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int counter = 1;
+            }
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td>@counter</td>
+                    <td>
+                        <img src="/@employee.image" alt="Image">
+                    </td>
+                    <td>
+                        ชื่อ: @employee.name<br />
+                        ตำแหน่ง: @employee.position<br />
+                        ฝ่าย: @employee.department<br />
+                        แผนก: @employee.division<br />
+                        สถานะ: @employee.status<br />
+                    </td>
+                    <td>
+                        @Html.ActionLink("แก้ไข", "EditEmployee", new { id = employee.id_number }, new { @class = "btn btn-warning" })&nbsp;
+                        <input type="button" value="ลบ" class="btn btn-danger delete-btn" data-id="@employee.id_number" />
+                    </td>
+                </tr>
+                counter++;
+            }
+        </tbody>
+    </table>
+    @using (Html.BeginForm("DeleteEmployee", "Organizational", FormMethod.Post, new { id = "deleteForm" }))
+    {
+        <input type="hidden" name="id" id="deleteId" />
+    }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".delete-btn").click(function () {
+                if (confirm('คุณต้องการลบข้อมูลพนักงานหรือไม่')) {
+                    var id = $(this).data("id");
+                    var row = $(this).closest("tr");
+
+                    $.ajax({
+                        url: "/Organizational/DeleteEmployee",
+                        type: "POST",
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                // Remove the row from the UI
+                                row.remove();
+                                console.log("Data deleted successfully.");
+
+                                // Reload the page
+                                location.reload();
+                            } else {
+                                console.log("Error deleting data.");
+                            }
+                        },
+                        error: function () {
+                            console.log("Error deleting data.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    @*<script>
+            $(document).ready(function () {
+                $("#searchButton").click(function () {
+                    var searchText = $("#searchInput").val();
+                    var selectedPosition = $("#positionSelect").val();
+                    var selectedDepartment = $("#departmentSelect").val();
+
+                });
+
+                $("#resetButton").click(function () {
+
+                });
+            });
+        </script>*@
+
+    <script>
+        $(document).ready(function () {
+            // ค้นหาข้อมูลเมื่อคลิกที่ปุ่มค้นหา
+            $("#searchButton").click(function () {
+                searchEmployees();
+            });
+
+            // รีเซ็ตข้อมูลเมื่อคลิกที่ปุ่มรีเซ็ต
+            $("#resetButton").click(function () {
+                resetSearch();
+            });
+        });
+
+        function searchEmployees() {
+            var searchText = $("#searchInput").val();
+            var position = $("#selectedPosition").val();
+            var division = $("#selectedDivision").val();
+
+            // ส่งค่าไปยังแอ็กชันในคอนโทรลเลอร์เพื่อค้นหาข้อมูลพนักงาน
+            $.ajax({
+                url: "@Url.Action("SearchEmployees", "Organizational")",
+                type: "GET",
+                data: {
+                    searchText: searchText,
+                    position: position,
+                    division: division
+                },
+                success: function (data) {
+                    // แสดงข้อมูลผลลัพธ์ในตาราง
+                    displayEmployees(data);
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    // จัดการข้อผิดพลาด (ถ้ามี)
+                    console.log(error);
+                }
+            });
+        }
+
+        function resetSearch() {
+            // รีเซ็ตค่าในช่องค้นหาและ dropdown
+            $("#searchInput").val("");
+            $("#selectedPosition").val("");
+            $("#selectedDivision").val("");
+
+            // ค้นหาพนักงานทั้งหมด
+            searchEmployees();
+        }
+
+         function displayEmployees(data) {
+            var tbody = $("table tbody");
+            tbody.empty();
+
+            if (data.length === 0) {
+                tbody.append("<tr><td colspan='4'>ไม่พบข้อมูลพนักงาน</td></tr>");
+                return;
+            }
+
+            var counter = 1;
+            $.each(data, function (index, employee) {
+                var row = $("<tr></tr>");
+                row.append("<td>" + counter + "</td>");
+                row.append("<td><img src='/" + employee.image + "' alt='Image'></td>");
+                row.append("<td>" +
+                    "ชื่อ: " + employee.name + "<br />" +
+                    "ตำแหน่ง: " + employee.position + "<br />" +
+                    "ฝ่าย: " + employee.department + "<br />" +
+                    "แผนก: " + employee.division + "<br />" +
+                    "สถานะ: " + employee.status + "<br />" +
+                    "</td>");
+                row.append("<td>" +
+                    "<a href='@Url.Action("EditEmployee", "Organizational")?id=" + employee.id_number + "' class='btn btn-warning'>แก้ไข</a>&nbsp;" +
+                    "<input type='button' value='ลบ' class='btn btn-danger delete-btn' data-id='" + employee.id_number + "' />" +
+                    "</td>");
+
+                tbody.append(row);
+                counter++;
+            });
+
+            // ให้ปุ่มลบพนักงานที่เพิ่มเข้าไปทำงาน
+            $(".delete-btn").click(function () {
+                var employeeId = $(this).data("id");
+                $("#deleteId").val(employeeId);
+                $("#deleteForm").submit();
+            });
+         }
+
+
+    </script>
+
+
+</body>

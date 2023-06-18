@@ -644,54 +644,22 @@ namespace WebApplication3.Controllers
             }
         }
 
-        [HttpDelete]
-        public ActionResult DeleteEvents(DataEvents model)
+
+        [HttpPost]
+        public ActionResult DeleteEvents(int EventID)
         {
-            try
+            var sql = @"Update  Dtb_Events set status=0  where EventID = @EventID";
+            using (SqlConnection con = new SqlConnection(sqlConn))
             {
-                var sql = @"Update  Dtb_Events set status=0  where EventID = @EventID";
-                using (SqlConnection con = new SqlConnection(sqlConn))
+                con.Open();
+                using (var cmd = new SqlCommand(sql, con))
                 {
-                    con.Open();
-
-
-                    using (var cmd = new SqlCommand(sql, con))
-                    {
-                        cmd.Parameters.AddWithValue("@EventID", model.EventID);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                    }
+                    cmd.Parameters.AddWithValue("@EventID", EventID);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
                 }
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = null
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
             }
-            catch (Exception ex)
-            {
-                var status = new ResultModel
-                {
-                    Status = new HttpStatusCodeResult(200),
-                    Success = true,
-                    Message = ex.Message.ToString()
-                };
-
-                return Json(new[] { new
-                {
-                    Status  = status,
-                    Details = string.Empty
-                }
-                });
-            }
+            return RedirectToAction("ViewEvents");
             //return View();
         }
 

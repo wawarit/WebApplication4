@@ -34,12 +34,12 @@
         right: 0;
         left: auto;
         transform: translateX(298%);
-        margin-top: -30px;
+        margin-top: -360px;
     }
 
     .upload-btn-container {
         position: absolute;
-        top: 410px;
+        top: 480px;
         right: 4px;
     }
 
@@ -220,6 +220,7 @@
 
 <br/>
 <div class='container'>
+
     <div class="right-section">
         <select id="year">
             @for (int year = DateTime.Now.Year; year >= 2021; year--)
@@ -227,10 +228,6 @@
                 <option value="@year">@year</option>
             }
         </select>
-        <div>
-            <div id="datepicker"></div>
-        </div>
-        
 
         <div class="left-section">
             <img src="https://drive.google.com/uc?export=view&id=1mSKa0ILsaL-JvdtODL9C6v9uF7g9vO5E" alt="Press Release Image">
@@ -240,7 +237,7 @@
             <a href="ViewallHoliday" class="upload-btn">ดูข้อมูลวันหยุดประจำปีทั้งหมด</a>
         </div>
 
-        <br>
+        <br/><br /><br /><br />
         <div class="button-container">
             <div>
                 <a id="annual-holiday-btn" href="ViewHoliday" class="upload-btn">วันหยุดประจำปี</a>
@@ -253,6 +250,12 @@
         
     </div>
 </div>
+
+<div class='container'>
+    <div id="datepicker"></div>
+</div>
+
+
 
 
 

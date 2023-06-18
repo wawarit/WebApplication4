@@ -1,20 +1,42 @@
-﻿@using (Html.BeginForm("UploadExcel", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+﻿<div id="dialog" title="สรุปการอัปโหลด">
+    <p id="summary-message"></p>
+</div>
+
+@using (Html.BeginForm("UploadExcel", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="file-upload">
         <label for="fileUpload">เลือกไฟล์:</label>
         <div class="input-group">
             <input type="text" id="file-name" class="form-control" readonly />
             <div class="input-group-append">
-                <button type="button" class="btn btn-primary" onclick="selectFile()">Browse</button>
+                <button type="button" class="btn btn-primary" onclick="selectFile()" style="background-color: #46C2CB; color: black;">เรียกดู</button>
             </div>
         </div>
         <input type="file" id="fileUpload" name="fileUpload" accept=".xlsx, .xls" style="display: none;" />
     </div>
+    <br>
     <div>
-        <input type="submit" value="อัพโหลดไฟล์" />
+        <input type="submit" value="อัปโหลดไฟล์" class="btn btn-primary" onclick="handleFormSubmit(); return false;" />
     </div>
 }
 
+<style>
+    .ui-dialog {
+        background-color: #87CEEB;
+    }
+
+        .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button {
+            text-align: center;
+        }
+
+    .btn-primary {
+        background-color: #46C2CB;
+        color: black;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
 
 <script>
     function selectFile() {
@@ -25,7 +47,49 @@
         var fileName = this.value.split('\\').pop();
         document.getElementById('file-name').value = fileName;
     });
+
+    function showUploadSummary(message) {
+        // Set the message in the dialog box
+        document.getElementById('summary-message').textContent = message;
+
+        // Open the dialog box
+        $("#dialog").dialog({
+            modal: true,
+            buttons: {
+                ตกลง: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+
+    function handleFormSubmit() {
+        // Perform the form submission asynchronously
+        $.ajax({
+            url: '@Url.Action("UploadExcel", "Excel")',
+            type: 'POST',
+            data: new FormData($('form')[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                var rowcount = data[0].Status.RowCount; // Get the number of processed rows
+                showUploadSummary("ประมวลผลข้อมูลอัปโหลดไฟล์ " + rowcount + " รายการ");
+            },
+
+
+            error: function () {
+                // Handle the error case
+                // ...
+            }
+        });
+    }
 </script>
+
+
+
+
+
 
 
 

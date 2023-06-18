@@ -1,17 +1,17 @@
 ﻿@model WebApplication4.Models.DataHoliday
 
-@{
+@*@{
     ViewBag.Title = "AddHoliday";
-}
+}*@
 
-<h2>AddHoliday</h2>
+@*<h2>สร้างข้อมูลวันหยุดประจำสัปดาห์</h2>*@
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>DataHoliday</h4>
+        
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -37,28 +37,36 @@
         <br />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="สร้างข้อมูลวันหยุดประจำปี" class="btn btn-primary custom-button" />
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+<style>
+    .custom-button {
+        color: black;
+        background-color: #46C2CB;
+    }
+</style>
+
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
 
 @*<script>
-    // Get the current date
-    var currentDate = new Date();
-    var year = currentDate.getFullYear();
-    var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-    var day = ("0" + currentDate.getDate()).slice(-2);
-    // Format the current date as "yyyy-MM-dd" for setting the default value
-    var formattedDate = year + "-" + month + "-" + day;
-    // Set the default value of the datepicker to the formatted current date
-    document.getElementById("Holiday").value = formattedDate;
-    // Allow selecting a different date
-    document.getElementById("Holiday").addEventListener("input", function () {
-        this.setAttribute("type", "date");
-    });
-</script>*@
+        // Get the current date
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+        var day = ("0" + currentDate.getDate()).slice(-2);
+        // Format the current date as "yyyy-MM-dd" for setting the default value
+        var formattedDate = year + "-" + month + "-" + day;
+        // Set the default value of the datepicker to the formatted current date
+        document.getElementById("Holiday").value = formattedDate;
+        // Allow selecting a different date
+        document.getElementById("Holiday").addEventListener("input", function () {
+            this.setAttribute("type", "date");
+        });
+    </script>*@

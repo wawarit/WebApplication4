@@ -5,7 +5,7 @@
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>DataEvents</h4>
+
     <hr />
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -61,6 +61,7 @@
         <div class="col-md-10">
             @Html.DropDownListFor(model => model.Department, new List<SelectListItem>
             {
+                new SelectListItem { Text = "แผนกทั้งหมด", Value = "แผนกทั้งหมด" },
                 new SelectListItem { Text = "แผนกบริการข้อมูลวัตถุดิบ", Value = "แผนกบริการข้อมูลวัตถุดิบ" },
                 new SelectListItem { Text = "แผนกบริการข้อมูลเครื่องจักร", Value = "แผนกบริการข้อมูลเครื่องจักร" },
                 new SelectListItem { Text = "แผนกบริการส่วนภูมิภาค", Value = "แผนกบริการส่วนภูมิภาค" },
@@ -82,15 +83,15 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
+            <input type="submit" value="บันทึกข้อมูล" class="btn btn-default" />
         </div>
     </div>
 </div>
 }
 
-<div>
+@*<div>
     @Html.ActionLink("Back to List", "Index")
-</div>
+</div>*@
 
 
 <script>

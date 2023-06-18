@@ -8,23 +8,28 @@
 
 <div class="row">
     <div class="col-md-6">
-        @*<h4>Create annual holiday information</h4>*@
+        <!-- <h4>Create annual holiday information</h4> -->
         <p>
-            @Html.ActionLink("สร้างข้อมูลวันหยุดประจำปี", "AddHoliday")
+            @Html.ActionLink("สร้างข้อมูลวันหยุดประจำปี", "AddHoliday", null, new { @class = "btn btn-primary custom-button" })
         </p>
-        @* Add any additional content for creating annual holiday information *@
+        <!-- Add any additional content for creating annual holiday information -->
     </div>
     <div class="col-md-6">
-        @*<h4>Annual holiday file information</h4>*@
+        <!-- <h4>Annual holiday file information</h4> -->
         <div class="upload-btn-container">
-            <a href="~/Excel/UploadExcel" class="upload-btn">ข้อมูลไฟล์วันหยุดประจำปี</a>
+            <a href="~/Excel/UploadExcel" class="upload-btn custom-button">ข้อมูลไฟล์วันหยุดประจำปี</a>
         </div>
-        <table class="table" id="holidayTable">
-            @* Add the table structure for displaying annual holiday file information *@
-        </table>
-        @* Add any additional content for displaying annual holiday file information *@
+
+        <!-- Add any additional content for displaying annual holiday file information -->
     </div>
 </div>
+
+<style>
+    .custom-button {
+        background-color: #46C2CB;
+        color: black;
+    }
+</style>
 
 
 <table class="table" id="holidayTable">
@@ -104,25 +109,24 @@
 
 @using (Html.BeginForm("DeleteHoliday", "Calendar", FormMethod.Post, new { id = "deleteForm" }))
 {
-    <input type="hidden" name="ID" id="deleteID" />
+    <input type="hidden" name="ID" id="deleteId" />
 }
-
-<div>
+@*<div>
     @Html.ActionLink("Back to List", "Index")
-</div>
+</div>*@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         $(".delete-btn").click(function () {
-            if (confirm('คุณต้องการลบเอกสารหรือไม่')) {
-                var ID = $(this).data("ID");
+            if (confirm('คุณต้องการลบข้อมูลวันหยุดประจำปีหรือไม่')) {
+                var ID = $(this).data("id");
                 var row = $(this).closest("tr");
 
                 $.ajax({
                     url: "/Calendar/DeleteHoliday",
                     type: "POST",
-                    data: { id: ID },
+                    data: { ID: ID },
                     success: function (response) {
                         if (response.success) {
                             // Remove the row from the UI
@@ -142,6 +146,7 @@
             }
         });
     });
+
 </script>
 
 
