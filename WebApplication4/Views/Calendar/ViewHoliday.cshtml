@@ -10,25 +10,34 @@
     <div class="col-md-6">
         <!-- <h4>Create annual holiday information</h4> -->
         <p>
-            @Html.ActionLink("สร้างข้อมูลวันหยุดประจำปี", "AddHoliday", null, new { @class = "btn btn-primary custom-button" })
+            @Html.ActionLink("สร้างข้อมูลวันหยุดประจำปี", "AddHoliday", null, new { @class = "btn btn-primary custom-button create-button" })
         </p>
         <!-- Add any additional content for creating annual holiday information -->
     </div>
     <div class="col-md-6">
         <!-- <h4>Annual holiday file information</h4> -->
         <div class="upload-btn-container">
-            <a href="~/Excel/UploadExcel" class="upload-btn custom-button">ข้อมูลไฟล์วันหยุดประจำปี</a>
+            <div class="col-md-6">
+                <a href="~/Excel/UploadExcel" class="upload-btn custom-button">ข้อมูลไฟล์วันหยุดประจำปี</a>
+            </div>
         </div>
-
-        <!-- Add any additional content for displaying annual holiday file information -->
     </div>
 </div>
 
 <style>
-    .custom-button {
+    .upload-btn-container {
+        display: block;  /*Add this line to override any previous display property */
+    }
+
+    .create-button {
         background-color: #46C2CB;
         color: black;
     }
+
+    /*.upload-btn-container .upload-btn {
+        color: black;
+    }*/
+
 </style>
 
 
@@ -41,17 +50,6 @@
         </tr>
     </thead>
 
-    @*<tr>
-            <th> </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Day_Holiday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Details)
-            </th>
-            <th></th>
-        </tr>*@
-
     @*เพิ่มลำดับ*@
     @{
         int counter = 1;
@@ -59,8 +57,9 @@
 
     @{
         var currentYear = DateTime.Now.Year;
-        var filteredData = Model.Where(item => DateTime.Parse(item.Day_Holiday).Year >= 2021 && DateTime.Parse(item.Day_Holiday).Year <= currentYear)
-                               .OrderByDescending(item => DateTime.Parse(item.Day_Holiday).Year)
+        var filteredData = Model.Where(item => DateTime.Parse(item.Day_Holiday).Year >= currentYear
+                                        && DateTime.Parse(item.Day_Holiday).Year <= currentYear)
+                               .OrderBy(item => DateTime.Parse(item.Day_Holiday))
                                .ToList();
     }
 
@@ -96,11 +95,14 @@
         var currentYear = new Date().getFullYear();
 
         $('#holidayTable tbody tr').each(function () {
-            var date = $(this).find('td:eq(1)').text(); // Assuming the date is in the second column (index 1)
+            var date = $(this).find('td:eq(1)').text().trim(); // Assuming the date is in the second column (index 1)
 
-            var year = new Date(date).getFullYear();
-            if (year !== currentYear) {
-                $(this).hide();
+            /*var year = new Date(date).getFullYear();*/
+            /*if (year !== currentYear) {*/
+            /*alert(date.substring(6, 10));*/
+            if (date.substring(6, 10) != currentYear) {
+                
+                /*$(this).hide();*/
             }
         });
     });
@@ -134,7 +136,7 @@
                             console.log("Data deleted successfully.");
 
                             // Reload the page
-                            location.reload();
+                            /*location.reload();*/
                         } else {
                             console.log("Error deleting data.");
                         }
@@ -148,7 +150,3 @@
     });
 
 </script>
-
-
-
-

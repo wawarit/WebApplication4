@@ -26,7 +26,7 @@ namespace WebApplication3.Controllers
 
             var result = new List<DataEvents>();
             DataTable dataTableaEvents = new DataTable();
-            var getDataEvents = "SELECT * FROM [Dtb_Events] ";
+            var getDataEvents = "SELECT * FROM [Dtb_Events] where Status = 1 ";
             using (SqlConnection con = new SqlConnection(sqlConn))
             {
                 con.Open();
@@ -172,7 +172,7 @@ namespace WebApplication3.Controllers
             System.Globalization.CultureInfo _cultureInfo = new System.Globalization.CultureInfo("en-GB");
             var result = new List<DataEvents>();
             DataTable dataTableaEvents = new DataTable();
-            var getDataEvents = "SELECT * FROM [Dtb_Events] ";
+            var getDataEvents = "SELECT * FROM [Dtb_Events] where Status = 1";
             using (SqlConnection con = new SqlConnection(sqlConn))
             {
                 con.Open();
