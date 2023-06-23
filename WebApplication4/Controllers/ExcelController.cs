@@ -94,6 +94,7 @@ namespace WebApplication4.Controllers
                 string fileName = Path.GetFileName(fileUpload.FileName);
                 string filePath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
 
+               
                 // กรณีตั้งชื่อไฟล์ใหม่
                 fileUpload.SaveAs(filePath);
 
